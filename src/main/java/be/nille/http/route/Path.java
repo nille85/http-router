@@ -35,7 +35,6 @@ public class Path {
         Matcher matcher = pattern.matcher(requestPath);
         
         boolean matches = matcher.matches();
-        log.info("Matches: " + matches);
         return matches;
     }
     
@@ -45,7 +44,6 @@ public class Path {
         Matcher matcher = pattern.matcher(value);
         while (matcher.find()) {
             variables.add(matcher.group(1));
-            log.info(matcher.group(1));
         }        
         return variables;
     }

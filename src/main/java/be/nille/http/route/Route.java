@@ -16,16 +16,16 @@ import lombok.ToString;
 @ToString
 public class Route {
     
-    public static enum Method{
-        GET,POST
-    }
+    
     
     private final Path path;
-    private final Method method;
+    private final RequestMethod method;
+    private final RouteHandler handler;
     
-    public Route(final Path path, final Method method){
+    public Route(final Path path, final RequestMethod method, final RouteHandler handler){
         this.path = path;
         this.method = method;
+        this.handler = handler;
     }
     
     

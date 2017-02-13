@@ -5,6 +5,11 @@
  */
 package be.nille.http;
 
+import be.nille.http.route.MethodNotAllowedException;
+import be.nille.http.route.Request;
+import be.nille.http.route.ResourceNotFoundException;
+import be.nille.http.route.Route;
+import be.nille.http.route.RouteRegistry;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -35,6 +40,7 @@ import io.netty.util.CharsetUtil;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 
@@ -47,9 +53,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
   
-      private HttpRequest request;
-      /** Buffer that stores the response content */
-      private final StringBuilder buf = new StringBuilder();
+   
+     
+      
+      private final RouteRegistry registry;
+      private HttpRequest httpRequest;
+      private HttpContent httpContent;
+      
+      public HttpServerHandler(final RouteRegistry registry){
+          this.registry = registry;
+      }
   
       @Override
       public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -59,96 +72,50 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
       @Override
       protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
           if (msg instanceof HttpRequest) {
-              HttpRequest request = this.request = (HttpRequest) msg;
-  
-              
-            
-              buf.setLength(0);
-              buf.append("WELCOME TO THE WILD WILD WEB SERVER\r\n");
-              buf.append("===================================\r\n");
-  
-              buf.append("VERSION: ").append(request.getProtocolVersion()).append("\r\n");
-              buf.append("HOSTNAME: ").append(HttpHeaders.getHost(request, "unknown")).append("\r\n");
-              buf.append("REQUEST_URI: ").append(request.getUri()).append("\r\n\r\n");
-  
-              HttpHeaders headers = request.headers();
-              if (!headers.isEmpty()) {
-                  for (Map.Entry<String, String> h: headers) {
-                      String key = h.getKey();
-                      String value = h.getValue();
-                      buf.append("HEADER: ").append(key).append(" = ").append(value).append("\r\n");
-                  }
-                  buf.append("\r\n");
-              }
-  
-              QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
-              Map<String, List<String>> params = queryStringDecoder.parameters();
-              if (!params.isEmpty()) {
-                  for (Entry<String, List<String>> p: params.entrySet()) {
-                      String key = p.getKey();
-                      List<String> vals = p.getValue();
-                      for (String val : vals) {
-                          buf.append("PARAM: ").append(key).append(" = ").append(val).append("\r\n");
-                      }
-                  }
-                  buf.append("\r\n");
-              }
-  
-              appendDecoderResult(buf, request);
+              log.info("HTTP Request received through channel");
+              this.httpRequest = (HttpRequest) msg;
           }
   
          if (msg instanceof HttpContent) {
-             HttpContent httpContent = (HttpContent) msg;
- 
-             ByteBuf content = httpContent.content();
-             if (content.isReadable()) {
-                 buf.append("CONTENT: ");
-                 buf.append(content.toString(CharsetUtil.UTF_8));
-                 buf.append("\r\n");
-                 appendDecoderResult(buf, request);
-             }
- 
+             log.info("HTTP Content received through channel");
+             this.httpContent = (HttpContent) msg;
+         
+           
              if (msg instanceof LastHttpContent) {
-                 buf.append("END OF CONTENT\r\n");
- 
+                 log.info("Last HTTP Content received through channel");
+                
                  LastHttpContent trailer = (LastHttpContent) msg;
-                 if (!trailer.trailingHeaders().isEmpty()) {
-                     buf.append("\r\n");
-                     for (String name: trailer.trailingHeaders().names()) {
-                         for (String value: trailer.trailingHeaders().getAll(name)) {
-                             buf.append("TRAILING HEADER: ");
-                             buf.append(name).append(" = ").append(value).append("\r\n");
-                         }
-                     }
-                     buf.append("\r\n");
+                 Request request = new Request(httpRequest, httpContent);
+                 StringBuilder sb = new StringBuilder();
+                 try{
+                    Route route = registry.find(request);
+                    String output = route.getHandler().handle(request);
+                    
+                    sb.append("ROUTE FOUND: ").append(route.toString()).append("\n");
+                    sb.append("OUTPUT: ").append(output);
+                 }catch(MethodNotAllowedException ex){
+                     sb.append("METHOD NOT ALLOWED");
                  }
-                  if (!writeResponse(trailer, ctx)) {
+                 catch(ResourceNotFoundException ex){
+                      sb.append("RESOURCE NOT FOUND");
+                 }
+              
+                 if (!writeResponse(trailer, ctx, sb.toString())) {
                      // If keep-alive is off, close the connection once the content is fully written.
                      ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
                  }
              }
          }
+               
      }
      
- 
-     private static void appendDecoderResult(StringBuilder buf, HttpObject o) {
-         DecoderResult result = o.decoderResult();
-         if (result.isSuccess()) {
-             return;
-         }
- 
-         buf.append(".. WITH DECODER FAILURE: ");
-         buf.append(result.cause());
-         buf.append("\r\n");
-     }
- 
-     private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx) {
+     private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, String content) {
          // Decide whether to close the connection or not.
-         boolean keepAlive = HttpHeaders.isKeepAlive(request);
+         boolean keepAlive = HttpHeaders.isKeepAlive(httpRequest);
          // Build the response object.
          FullHttpResponse response = new DefaultFullHttpResponse(
-                 HTTP_1_1, currentObj.getDecoderResult().isSuccess()? OK : BAD_REQUEST,
-                 Unpooled.copiedBuffer(buf.toString(), CharsetUtil.UTF_8));
+                 HTTP_1_1, currentObj.decoderResult().isSuccess()? OK : BAD_REQUEST,
+                 Unpooled.copiedBuffer(content, CharsetUtil.UTF_8));
  
          response.headers().set(CONTENT_TYPE, "text/plain; charset=UTF-8");
  
@@ -161,7 +128,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
          }
  
          // Encode the cookie.
-         String cookieString = request.headers().get(COOKIE);
+         String cookieString = httpRequest.headers().get(COOKIE);
          if (cookieString != null) {
              Set<Cookie> cookies = CookieDecoder.decode(cookieString);
              if (!cookies.isEmpty()) {
@@ -178,6 +145,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
  
          // Write the response.
          ctx.write(response);
+         
  
          return keepAlive;
      }

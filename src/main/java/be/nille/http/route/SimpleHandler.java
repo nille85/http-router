@@ -9,10 +9,11 @@ package be.nille.http.route;
  *
  * @author nholvoet
  */
-@FunctionalInterface
-public interface RouteHandler {
-    
-    
-    String handle(Request request);
+public class SimpleHandler implements RouteHandler {
+
+    @Override
+    public String handle(Request request) {
+         return request.getURI();
+    }
     
 }

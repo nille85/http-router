@@ -9,10 +9,10 @@ package be.nille.http.route;
  *
  * @author nholvoet
  */
-@FunctionalInterface
-public interface RouteHandler {
+public class MethodNotAllowedException extends RuntimeException {
     
     
-    String handle(Request request);
-    
+    public MethodNotAllowedException(final String message){
+        super(message);
+    }
 }

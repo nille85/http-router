@@ -9,10 +9,10 @@ package be.nille.http.route;
  *
  * @author nholvoet
  */
-@FunctionalInterface
-public interface RouteHandler {
+public class ResourceNotFoundException extends RuntimeException {
     
     
-    String handle(Request request);
-    
+    public ResourceNotFoundException(final String message){
+        super(message);
+    }
 }
