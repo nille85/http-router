@@ -54,8 +54,6 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
   
    
-     
-      
       private final RouteRegistry registry;
       private HttpRequest httpRequest;
       private HttpContent httpContent;

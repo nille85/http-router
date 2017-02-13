@@ -4,7 +4,7 @@ import be.nille.http.route.Path;
 import be.nille.http.route.RequestMethod;
 import be.nille.http.route.Route;
 import be.nille.http.route.RouteRegistry;
-import be.nille.http.route.SimpleHandler;
+import be.nille.http.route.impl.SimpleHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
