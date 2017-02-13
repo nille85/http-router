@@ -103,10 +103,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                
      }
       
-    
   
-      
-      
      
      private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, Response resp) {
          // Decide whether to close the connection or not.
@@ -116,12 +113,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                  HTTP_1_1, currentObj.decoderResult().isSuccess()? OK : BAD_REQUEST,
                  Unpooled.copiedBuffer(resp.getContent(), CharsetUtil.UTF_8));
  
-         response.setStatus(new HttpResponseStatus(resp.getStatusCode(), ""));
-         
-         for(Map.Entry<String,String> header : resp.getHeaders().entrySet()){
-             response.headers().set(header.getKey(),header.getValue());
-         }
-         
  
          if (keepAlive) {
              // Add 'Content-Length' header only for a keep-alive connection.
@@ -130,21 +121,11 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
              // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
              response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
          }
- 
-         // Encode the cookie.
-         String cookieString = httpRequest.headers().get(COOKIE);
-         if (cookieString != null) {
-             Set<Cookie> cookies = CookieDecoder.decode(cookieString);
-             if (!cookies.isEmpty()) {
-                 // Reset the cookies if necessary.
-                 for (Cookie cookie: cookies) {
-                     response.headers().add(SET_COOKIE, ServerCookieEncoder.encode(cookie));
-                 }
-             }
-         } else {
-             // Browser sent no cookie.  Add some.
-             response.headers().add(SET_COOKIE, ServerCookieEncoder.encode("key1", "value1"));
-             response.headers().add(SET_COOKIE, ServerCookieEncoder.encode("key2", "value2"));
+         
+         response.setStatus(new HttpResponseStatus(resp.getStatusCode(), ""));
+         
+         for(Map.Entry<String,String> header : resp.getHeaders().entrySet()){
+             response.headers().set(header.getKey(),header.getValue());
          }
  
          // Write the response.
