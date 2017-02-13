@@ -45,7 +45,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
+public class HttpSnoopServerHandler extends SimpleChannelInboundHandler<Object> {
   
       private HttpRequest request;
       /** Buffer that stores the response content */
@@ -129,7 +129,44 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
              }
          }
      }
-     
+      
+      
+      private static String getRequestOverview(HttpRequest request){
+          final StringBuilder buf = new StringBuilder();
+          buf.setLength(0);
+              buf.append("WELCOME TO THE WILD WILD WEB SERVER\r\n");
+              buf.append("===================================\r\n");
+  
+              buf.append("VERSION: ").append(request.getProtocolVersion()).append("\r\n");
+              buf.append("HOSTNAME: ").append(HttpHeaders.getHost(request, "unknown")).append("\r\n");
+              buf.append("REQUEST_URI: ").append(request.getUri()).append("\r\n\r\n");
+  
+              HttpHeaders headers = request.headers();
+              if (!headers.isEmpty()) {
+                  for (Map.Entry<String, String> h: headers) {
+                      String key = h.getKey();
+                      String value = h.getValue();
+                      buf.append("HEADER: ").append(key).append(" = ").append(value).append("\r\n");
+                  }
+                  buf.append("\r\n");
+              }
+  
+              QueryStringDecoder queryStringDecoder = new QueryStringDecoder(request.getUri());
+              Map<String, List<String>> params = queryStringDecoder.parameters();
+              if (!params.isEmpty()) {
+                  for (Entry<String, List<String>> p: params.entrySet()) {
+                      String key = p.getKey();
+                      List<String> vals = p.getValue();
+                      for (String val : vals) {
+                          buf.append("PARAM: ").append(key).append(" = ").append(val).append("\r\n");
+                      }
+                  }
+                  buf.append("\r\n");
+              }
+  
+              appendDecoderResult(buf, request);
+              return buf.toString();
+      }
  
      private static void appendDecoderResult(StringBuilder buf, HttpObject o) {
          DecoderResult result = o.decoderResult();
