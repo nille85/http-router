@@ -22,6 +22,11 @@ public class Route {
     private final RequestMethod method;
     private final RouteHandler handler;
     
+    
+    public Route(final String path, final String requestMethod, final RouteHandler handler){
+        this(new Path(path), new RequestMethod(requestMethod), handler);
+    }
+    
     public Route(final Path path, final RequestMethod method, final RouteHandler handler){
         this.path = path;
         this.method = method;

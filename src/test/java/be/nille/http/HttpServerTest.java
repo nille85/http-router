@@ -3,20 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route;
-
-import java.util.Map;
+package be.nille.http;
 
 /**
  *
  * @author Niels Holvoet
  */
-public interface Response {
-    
-    String getContent();
-    
-    Map<String,String> getHeaders();
-    
-    int getStatusCode();
+public class HttpServerTest {
     
 }

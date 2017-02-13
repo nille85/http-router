@@ -11,7 +11,7 @@ jar {
        
 }
 
-mainClassName = 'be.nille.http.HttpServer'
+mainClassName = 'be.nille.http.Main'
 
 
 repositories {
@@ -38,4 +38,6 @@ test {
         events "passed", "skipped", "failed", "standardOut", "standardError"
     }
 }
+
+
 

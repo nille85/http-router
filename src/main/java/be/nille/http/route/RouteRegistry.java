@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.Getter;
 
 /**
  *
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
  */
 public class RouteRegistry {
 
+    @Getter
     private final List<Route> routes;
 
     public RouteRegistry() {

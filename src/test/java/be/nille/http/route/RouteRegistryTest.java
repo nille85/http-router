@@ -5,38 +5,26 @@
  */
 package be.nille.http.route;
 
+import static junit.framework.Assert.assertTrue;
+import org.junit.Test;
+
 /**
  *
  * @author nholvoet
  */
 public class RouteRegistryTest {
     
-    public static class SimpleHandler implements RouteHandler{
-
-        @Override
-        public String handle(Request request) {
-            return request.getURI();
-        }
-        
-        
-        
-    }
+   
     
-    
+    @Test
     public void testRegistry(){
         RouteRegistry registry = new RouteRegistry()
-                .withRoute(new Route(
-                        new Path("/subscriptions/{subscriptionId"), new RequestMethod("GET"),
-                        new SimpleHandler()
-                    )
+                .withRoute(new Route("/subscriptions/{subscriptionId}","GET",(request) -> new SimpleResponse(request.toString(),"text/plain; charset=UTF-8"))
                 )
-                .withRoute(new Route(
-                        new Path("/subscriptions"), new RequestMethod("POST"),
-                         new SimpleHandler()
-                    )
+                .withRoute(new Route("/subscriptions","POST",(request) -> new SimpleResponse(request.toString(),"text/plain; charset=UTF-8"))
                 );
         
-       
+       assertTrue(registry.getRoutes().size() == 2);
         
         
     }

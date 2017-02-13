@@ -13,6 +13,6 @@ package be.nille.http.route;
 public interface RouteHandler {
     
     
-    String handle(Request request);
+    Response handle(Request request);
     
 }
