@@ -5,9 +5,10 @@
  */
 package be.nille.http;
 
-import be.nille.http.route.Route;
-import be.nille.http.route.RouteRegistry;
-import be.nille.http.route.SimpleResponse;
+import be.nille.http.route2.Route;
+import be.nille.http.route2.RouteRegistry;
+import be.nille.http.route.response.DefaultResponse;
+import be.nille.http.route.response.Response;
 
 /**
  *
@@ -27,9 +28,9 @@ public class Main {
         
 
         RouteRegistry registry = new RouteRegistry()
-                .withRoute(new Route("/subscriptions/{subscriptionId}","GET",(request) -> new SimpleResponse("this is the response","text/plain; charset=UTF-8"))
-                )
-                .withRoute(new Route("/subscriptions","POST",(request) -> new SimpleResponse("another response","text/plain; charset=UTF-8"))
+                .withRoute(new Route("GET","/subscriptions/{subscriptionId}",(request) -> new DefaultResponse(new Response.Body("sdmlkfsd"))
+                ))
+                .withRoute(new Route("POST","/subscriptions",(request) -> new DefaultResponse(new Response.Body("sdmlkfsd")))
                 );
         
         new DefaultHttpServer(port, registry).run();

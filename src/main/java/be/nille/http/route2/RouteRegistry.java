@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route;
+package be.nille.http.route2;
 
+import be.nille.http.route.MethodNotAllowedException;
+import be.nille.http.route.ResourceNotFoundException;
+import be.nille.http.route.request.Request;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,22 +36,23 @@ public class RouteRegistry {
         List<Route> filteredRoutes
                 = this.routes
                 .stream()
-                .filter(route -> route.getPath().matches(request.getURI()))
+                .filter(route -> route.matchesResource(request))
                 .collect(Collectors.toList());
+        
         if (!filteredRoutes.isEmpty()) {
             Optional<Route> optional = filteredRoutes.stream()
-                    .filter(route -> request.getMethod().equals(route.getMethod()))
+                    .filter(route -> route.matchesMethod(request))
                     .findFirst();
             return optional.orElseThrow(
                     () -> new MethodNotAllowedException(
                             String.format("The method %s at the URI %s is not allowed", 
-                                    request.getMethod().getMethodName(),
-                                    request.getURI())
+                                    request.getMethod().getName(),
+                                    request.getUri().toString())
                     ));
         }
        
         throw new ResourceNotFoundException(
-                String.format("The resource at the URI %s was not found", request.getURI())
+                String.format("The resource at the URI %s was not found", request.getUri().toString())
         );
 
     }

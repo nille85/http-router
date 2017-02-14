@@ -5,6 +5,8 @@
  */
 package be.nille.http.route.request;
 
+import be.nille.http.route2.Method;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -14,6 +16,10 @@ import lombok.Getter;
  * @author nholvoet
  */
 public interface Request {
+
+    Method getMethod();
+
+    URI getUri();
 
     Map<String, List<String>> getQueryParameters();
 
@@ -31,4 +37,6 @@ public interface Request {
         }
 
     }
+
+    
 }

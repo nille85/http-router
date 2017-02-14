@@ -6,6 +6,7 @@
 package be.nille.http.route.request;
 
 
+import be.nille.http.route2.Method;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import java.net.URI;
 import java.util.HashMap;
@@ -17,20 +18,24 @@ import lombok.Getter;
  *
  * @author nholvoet
  */
+@Getter
 public class DefaultRequest implements Request {
     
+    private final Method method;
+    
     private final URI uri;
-    @Getter
+  
     private final Map<String,String> headers;
     
     private final Body body;
     
     
     public DefaultRequest(final URI uri){
-        this(uri, new Body(""), new HashMap<>());
+        this(new Method(Method.GET), uri, new Body(""), new HashMap<>());
     }
     
-    public DefaultRequest(final URI uri, final Body body, Map<String,String> headers){
+    public DefaultRequest(final Method method, final URI uri, final Body body, Map<String,String> headers){
+        this.method = method;
         this.uri = uri;
         this.headers = headers;
         this.body = body;
@@ -44,10 +49,7 @@ public class DefaultRequest implements Request {
       return params;
     }
 
-    @Override
-    public Body getBody() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
     
     

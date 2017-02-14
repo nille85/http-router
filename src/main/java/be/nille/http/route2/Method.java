@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route;
+package be.nille.http.route2;
 
 import java.util.Objects;
 import lombok.Getter;
@@ -11,22 +11,27 @@ import lombok.ToString;
 
 /**
  *
- * @author nholvoet
+ * @author Niels Holvoet
  */
 @Getter
 @ToString
-public class RequestMethod {
-        
-    private final String methodName;
-    
-    public RequestMethod(final String methodName){
-        this.methodName = methodName;
+public class Method {
+
+    public static final String GET = "GET";
+    public static final String PUT = "PUT";
+    public static final String POST = "POST";
+    public static final String DELETE = "DELETE";
+
+    private final String name;
+
+    public Method(final String name) {
+        this.name = name;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 53 * hash + Objects.hashCode(this.methodName);
+        hash = 53 * hash + Objects.hashCode(this.name);
         return hash;
     }
 
@@ -38,13 +43,11 @@ public class RequestMethod {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RequestMethod other = (RequestMethod) obj;
-        if (!Objects.equals(this.methodName, other.methodName)) {
+        final Method other = (Method) obj;
+        if (!Objects.equals(this.name, other.name)) {
             return false;
         }
         return true;
     }
-    
-    
-    
+
 }
