@@ -7,6 +7,8 @@ package be.nille.http.route;
 
 import be.nille.http.ImmutableHttpServer;
 import be.nille.http.HttpServer;
+import be.nille.http.route.exception.DefaultRouteExceptionHandler;
+import be.nille.http.route.exception.RouteExceptionHandler;
 import be.nille.http.route2.Route;
 import static com.google.common.base.Preconditions.checkArgument;
 import lombok.Getter;
@@ -19,14 +21,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class HttpRouter {
     
-    private boolean started;
+   
     private int port;
     @Getter
     private final RouteRegistry registry;
+    private final RouteExceptionHandler exceptionHandler;
+    
     
     public HttpRouter(){
-        this.started = false;
-        this.registry = new RouteRegistry(this);
+        this.exceptionHandler = new DefaultRouteExceptionHandler();
+        this.registry = new RouteRegistry();
     }
        
     public HttpRouter listenTo(final int port){
@@ -40,23 +44,15 @@ public class HttpRouter {
         return this;
     }
     
-    
-    public RouteBuilder addRoute(){
-        log.debug("adding route ... ");
-        return new RouteBuilder(this);
-    }
-    
-    
+   
     public void start() throws Exception{
         validate();
         HttpServer server = new ImmutableHttpServer(port, registry);
         server.run();
-        started = true;
+        
     }
     
-    public boolean isStarted(){
-        return started;
-    }
+ 
     
     private void validate(){
         checkArgument(port >= 0, "the specified port %s should be larger than zero", port);

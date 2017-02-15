@@ -5,11 +5,11 @@
  */
 package be.nille.http;
 
-import be.nille.http.route.MethodNotAllowedException;
-
-import be.nille.http.route.ResourceNotFoundException;
+import be.nille.http.route.MethodNotFoundException;
+import be.nille.http.route.exception.PathNotFoundException;
 
 import be.nille.http.route.RouteRegistry;
+import be.nille.http.route.exception.HttpRouterException;
 import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.DefaultResponse;
@@ -88,23 +88,28 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                             method, new URI(httpRequest.uri()), body, getHeaders(httpRequest), route
                     );
                     response = route.execute(request);
-                } catch (MethodNotAllowedException ex) {
+                    
+                } catch (MethodNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
                             new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
                     );
                    
-                } catch (ResourceNotFoundException ex) {
+                } catch (PathNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
                             new Response.Body("not found"), new StatusCode(StatusCode.NOT_FOUND), getDefaultHeaders()
                     );
 
-                } catch (Exception ex) {
+                } 
+                
+                catch (Exception ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
                             new Response.Body(""), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), getDefaultHeaders()
                     );
+                    
+                   
 
                 }
 

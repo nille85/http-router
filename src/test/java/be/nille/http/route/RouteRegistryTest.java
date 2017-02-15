@@ -24,7 +24,7 @@ public class RouteRegistryTest {
     
     @Test
     public void testRegistry(){
-        RouteRegistry registry = new RouteRegistry(new HttpRouter())
+        RouteRegistry registry = new RouteRegistry()
                 .add(new Route("GET", "/subscriptions/{subscriptionId}",new MyRequestHandler())
                 )
                 .add(new Route("POST", "/subscriptions",new MyRequestHandler())

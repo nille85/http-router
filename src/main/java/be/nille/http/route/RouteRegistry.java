@@ -5,8 +5,7 @@
  */
 package be.nille.http.route;
 
-import be.nille.http.route.MethodNotAllowedException;
-import be.nille.http.route.ResourceNotFoundException;
+import be.nille.http.route.exception.PathNotFoundException;
 import be.nille.http.route.request.Request;
 import be.nille.http.route2.Method;
 import be.nille.http.route2.Route;
@@ -25,11 +24,11 @@ public class RouteRegistry {
 
     @Getter
     private final List<Route> routes;
-    private final HttpRouter router;
+   
 
-    public RouteRegistry(final HttpRouter router) {
+    public RouteRegistry() {
         routes = new ArrayList<>();
-        this.router = router;
+       
     }
     
 
@@ -38,9 +37,6 @@ public class RouteRegistry {
         return this;
     }
     
-    public HttpRouter save(){
-        return router;
-    }
 
     public Route find(Method method, URI requestURI) {
         List<Route> filteredRoutes
@@ -53,15 +49,14 @@ public class RouteRegistry {
             Optional<Route> optional = filteredRoutes.stream()
                     .filter(route -> route.matchesMethod(method))
                     .findFirst();
-            return optional.orElseThrow(
-                    () -> new MethodNotAllowedException(
+            return optional.orElseThrow(() -> new MethodNotFoundException(
                             String.format("The method %s at the URI path %s is not allowed", 
                                     method.getName(),
                                     requestURI.getPath())
                     ));
         }
        
-        throw new ResourceNotFoundException(
+        throw new PathNotFoundException(
                 String.format("The resource at the URI path %s was not found", requestURI.getPath())
         );
 

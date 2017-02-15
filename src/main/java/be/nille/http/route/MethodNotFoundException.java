@@ -9,10 +9,10 @@ package be.nille.http.route;
  *
  * @author nholvoet
  */
-public class ResourceNotFoundException extends RuntimeException {
+public class MethodNotFoundException extends RuntimeException {
     
     
-    public ResourceNotFoundException(final String message){
+    public MethodNotFoundException(final String message){
         super(message);
     }
 }

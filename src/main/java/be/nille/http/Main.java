@@ -8,6 +8,8 @@ package be.nille.http;
 import be.nille.http.route.HttpRouter;
 import be.nille.http.route.response.Response;
 import be.nille.http.route2.Method;
+import be.nille.http.route2.Path;
+import be.nille.http.route2.Route;
 
 /**
  *
@@ -29,13 +31,14 @@ public class Main {
         
        
         
-        router.addRoute()//should return RouteBuilder
-                .withMethod(Method.GET)
-                .withPath("/subscriptions")
-                .withHandler(
-                              (request) -> Response.builder().withBody("this is my content").build()
+        router.addRoute(
+                new Route(
+                        new Method(Method.GET),
+                        new Path("/subscriptions"),
+                        (request) -> Response.builder().withBody("this is my content").build()
                 )
-                .save(); //should return router
+        );
+              
         
         
         router.start();
