@@ -7,6 +7,7 @@ package be.nille.http.route;
 
 import be.nille.http.ImmutableHttpServer;
 import be.nille.http.HttpServer;
+import be.nille.http.route2.Route;
 import static com.google.common.base.Preconditions.checkArgument;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,11 @@ public class HttpRouter {
     public HttpRouter listenTo(final int port){
         log.debug(String.format("Router will be listening to port %s", port));
         this.port = port;
+        return this;
+    }
+    
+    public HttpRouter addRoute(final Route route){
+        this.registry.add(route);
         return this;
     }
     

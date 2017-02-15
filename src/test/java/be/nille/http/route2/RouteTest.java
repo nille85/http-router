@@ -5,7 +5,7 @@
  */
 package be.nille.http.route2;
 
-import be.nille.http.route.request.ImmutableRequest;
+import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
@@ -32,9 +32,8 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
-
-        assertTrue(route.matchesResource(request));
+       
+        assertTrue(route.matchesResource("/subscriber/1/search"));
     }
 
     @Test
@@ -43,9 +42,9 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search?hello=p"));
 
-        assertTrue(route.matchesResource(request));
+
+        assertTrue(route.matchesResource("/subscriber/1/search?hello=p"));
     }
 
     @Test
@@ -53,9 +52,9 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
+       
 
-        assertTrue(route.matchesResource(request));
+        assertTrue(route.matchesResource("/subscriber/1/search"));
 
     }
     
@@ -64,9 +63,9 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/search/:subscriberId"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/search/1"));
+     
 
-        assertTrue(route.matchesResource(request));
+        assertTrue(route.matchesResource("/subscriber/search/1"));
 
     }
 
@@ -76,9 +75,8 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("/subscription/2/search"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
 
-        assertFalse(route.matchesResource(request));
+        assertFalse(route.matchesResource("/subscriber/1/search"));
     }
 
     @Test
@@ -87,9 +85,9 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("subscription/1/search"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
+       
 
-        assertFalse(route.matchesResource(request));
+        assertFalse(route.matchesResource("/subscriber/1/search"));
     }
 
     @Test
@@ -98,55 +96,11 @@ public class RouteTest {
         Route route = new Route(new Method(Method.GET), new Path("subscription/1/searchp"),
                 (request) -> new DefaultResponse(new Response.Body("content")));
 
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
-
-        assertFalse(route.matchesResource(request));
-    }
-    
-    
-    @Test
-    public void routeShouldHaveNoPathParams() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
-
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/search"));
-
-        Map<String,String> pathParams = route.getPathVariables(request);
-        
-        assertTrue(pathParams.isEmpty());
       
 
+        assertFalse(route.matchesResource("/subscriber/1/search"));
     }
     
-    @Test
-    public void routeShouldHaveTwoPathParams() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search/:language"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
-
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search/nl"));
-
-        Map<String,String> pathParams = route.getPathVariables(request);
-        for(Map.Entry<String,String> entry : pathParams.entrySet()){
-            log.debug(entry.getKey() + ":" + entry.getValue());
-        } 
-        assertEquals(pathParams.get("language"),"nl");
-        assertEquals(pathParams.get("subscriberId"),"1");
-
-    }
     
-    @Test
-    public void routeShouldHaveOnePathParam() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
-
-        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
-
-        Map<String,String> pathParams = route.getPathVariables(request);
-       
-        assertTrue(pathParams.size() == 1);
-        assertEquals(pathParams.get("subscriberId"),"1");
-       
-
-    }
-
+    
 }

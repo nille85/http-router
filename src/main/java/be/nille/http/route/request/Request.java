@@ -22,10 +22,17 @@ public interface Request {
     URI getUri();
 
     Map<String, List<String>> getQueryParameters();
+    
+    Map<String, String> getPathParameters();
 
     Map<String, String> getHeaders();
 
     Body getBody();
+    
+    
+    public static RequestBuilder builder(){
+        return new RequestBuilder();
+    }
 
     @Getter
     public static class Body {

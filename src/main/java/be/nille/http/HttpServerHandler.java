@@ -10,7 +10,7 @@ import be.nille.http.route.MethodNotAllowedException;
 import be.nille.http.route.ResourceNotFoundException;
 
 import be.nille.http.route.RouteRegistry;
-import be.nille.http.route.request.ImmutableRequest;
+import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
@@ -75,23 +75,25 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             if (msg instanceof LastHttpContent) {
 
                 LastHttpContent trailer = (LastHttpContent) msg;
-                //Request request = new Request(httpRequest, httpContent);
-
-                Method method = new Method(httpRequest.method().name());
-                Request.Body body = new Request.Body(getRequestBody(httpContent));
-
-                StringBuilder sb = new StringBuilder();
+           
+               
                 Response response;
                 try {
-                    Request request = new ImmutableRequest(method, new URI(httpRequest.uri()), body, getHeaders(httpRequest));
-                    Route route = registry.find(request);
-                    response = route.getHandler().handle(request);
+                    
+                    Method method = new Method(httpRequest.method().name());
+                    Request.Body body = new Request.Body(getRequestBody(httpContent));
+                    
+                    Route route = registry.find(method,new URI(httpRequest.uri()));//possibly throws exception
+                    Request request = new DefaultRequest(
+                            method, new URI(httpRequest.uri()), body, getHeaders(httpRequest), route
+                    );
+                    response = route.execute(request);
                 } catch (MethodNotAllowedException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
                             new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
                     );
-                    sb.append("METHOD NOT ALLOWED");
+                   
                 } catch (ResourceNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(

@@ -8,7 +8,9 @@ package be.nille.http.route;
 import be.nille.http.route.MethodNotAllowedException;
 import be.nille.http.route.ResourceNotFoundException;
 import be.nille.http.route.request.Request;
+import be.nille.http.route2.Method;
 import be.nille.http.route2.Route;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +25,7 @@ public class RouteRegistry {
 
     @Getter
     private final List<Route> routes;
-    private HttpRouter router;
+    private final HttpRouter router;
 
     public RouteRegistry(final HttpRouter router) {
         routes = new ArrayList<>();
@@ -40,27 +42,27 @@ public class RouteRegistry {
         return router;
     }
 
-    public Route find(Request request) {
+    public Route find(Method method, URI requestURI) {
         List<Route> filteredRoutes
                 = this.routes
                 .stream()
-                .filter(route -> route.matchesResource(request))
+                .filter(route -> route.matchesResource(requestURI.getPath()))
                 .collect(Collectors.toList());
         
         if (!filteredRoutes.isEmpty()) {
             Optional<Route> optional = filteredRoutes.stream()
-                    .filter(route -> route.matchesMethod(request))
+                    .filter(route -> route.matchesMethod(method))
                     .findFirst();
             return optional.orElseThrow(
                     () -> new MethodNotAllowedException(
-                            String.format("The method %s at the URI %s is not allowed", 
-                                    request.getMethod().getName(),
-                                    request.getUri().toString())
+                            String.format("The method %s at the URI path %s is not allowed", 
+                                    method.getName(),
+                                    requestURI.getPath())
                     ));
         }
        
         throw new ResourceNotFoundException(
-                String.format("The resource at the URI %s was not found", request.getUri().toString())
+                String.format("The resource at the URI path %s was not found", requestURI.getPath())
         );
 
     }
