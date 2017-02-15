@@ -3,26 +3,34 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route2;
+package be.nille.http.route;
 
+import be.nille.http.route.HttpRouter;
+import be.nille.http.route.RouteRegistry;
 import be.nille.http.route2.Method;
 import be.nille.http.route2.Path;
 import be.nille.http.route2.RequestHandler;
 import be.nille.http.route2.Route;
 import com.google.common.base.Preconditions;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author nholvoet
  */
+@Slf4j
 public class RouteBuilder {
 
     private Method method;
     private RequestHandler handler;
     private Path path;
+    private final HttpRouter router;
+    
    
 
-    public RouteBuilder() { 
+    public RouteBuilder(final HttpRouter router) {
+        this.router = router;
+       
     }
 
     public RouteBuilder withMethod(final Method method) {
@@ -50,9 +58,12 @@ public class RouteBuilder {
         return this;
     }
 
-    public Route build() {
+    public HttpRouter save() {
         validate();
-        return new Route(method, path, handler);
+        Route route = new Route(method, path, handler);
+        log.debug(String.format("adding route to router: %s", route.toString()));
+        router.getRegistry().add(route);
+        return router;
         
     }
 

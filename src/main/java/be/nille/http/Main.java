@@ -6,7 +6,7 @@
 package be.nille.http;
 
 import be.nille.http.route.HttpRouter;
-import be.nille.http.route2.RouteBuilder;
+import be.nille.http.route.RouteBuilder;
 import be.nille.http.route2.Route;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.ResponseBuilder;
@@ -30,8 +30,20 @@ public class Main {
         HttpRouter router = new HttpRouter()
                 .listenTo(port);
         
+       
+        
+        router.addRoute()//should return RouteBuilder
+                .withMethod(Method.GET)
+                .withPath("/subscriptions")
+                .withHandler(
+                              (request) -> Response.builder().withBody("this is my content").build()
+                )
+                .save(); //should return router
         
         
+        router.start();
+        
+        /*
         router.withRoutes()           
                     .add(Route.builder()
                             .withMethod(Method.POST)
@@ -51,7 +63,7 @@ public class Main {
                     )
                     .save();      
         
-        router.start();
+       */
     }
     
 }

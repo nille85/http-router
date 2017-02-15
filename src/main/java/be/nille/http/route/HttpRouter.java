@@ -8,6 +8,7 @@ package be.nille.http.route;
 import be.nille.http.ImmutableHttpServer;
 import be.nille.http.HttpServer;
 import static com.google.common.base.Preconditions.checkArgument;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -19,6 +20,7 @@ public class HttpRouter {
     
     private boolean started;
     private int port;
+    @Getter
     private final RouteRegistry registry;
     
     public HttpRouter(){
@@ -27,12 +29,15 @@ public class HttpRouter {
     }
        
     public HttpRouter listenTo(final int port){
+        log.debug(String.format("Router will be listening to port %s", port));
         this.port = port;
         return this;
     }
     
-    public RouteRegistry withRoutes(){
-        return registry;
+    
+    public RouteBuilder addRoute(){
+        log.debug("adding route ... ");
+        return new RouteBuilder(this);
     }
     
     

@@ -5,7 +5,8 @@
  */
 package be.nille.http.route.fluent;
 
-import be.nille.http.route2.RouteBuilder;
+import be.nille.http.route.HttpRouter;
+import be.nille.http.route.RouteBuilder;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.ResponseBuilder;
@@ -24,11 +25,11 @@ public class RouteTest {
     
     @Test
     public void saveShouldNotThrowException(){
-        Route route = new RouteBuilder()
+        HttpRouter router = new RouteBuilder(new HttpRouter())
                 .withPath("/subscription/search")
                 .withMethod(Method.GET)
                 .withHandler(new MyRequestHandler())
-                .build();
+                .save();
     }
     
     private static class MyRequestHandler implements RequestHandler{

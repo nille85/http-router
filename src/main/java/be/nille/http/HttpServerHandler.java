@@ -90,13 +90,13 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 } catch (MethodNotAllowedException ex) {
                     log.info(ex.getMessage());
                     response = new Response(
-                            new Response.Body(""), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), new ContentType("text/html; charset=utf-8"), new HashMap<>()
+                            new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), new ContentType("text/html; charset=utf-8"), new HashMap<>()
                     );
                     sb.append("METHOD NOT ALLOWED");
                 } catch (ResourceNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new Response(
-                            new Response.Body(""), new StatusCode(StatusCode.NOT_FOUND), new ContentType("text/html; charset=utf-8"), new HashMap<>()
+                            new Response.Body("not found"), new StatusCode(StatusCode.NOT_FOUND), new ContentType("text/html; charset=utf-8"), new HashMap<>()
                     );
 
                 } catch (Exception ex) {

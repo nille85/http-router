@@ -36,10 +36,6 @@ public class Route {
         this.handler = handler;
     }
     
-    public static RouteBuilder builder(){
-        return new RouteBuilder();
-    }
-    
     
     public boolean matchesMethod(final Request request){
         return request.getMethod().equals(method);
