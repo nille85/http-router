@@ -1,6 +1,6 @@
 package be.nille.http;
 
-import be.nille.http.route2.RouteRegistry;
+import be.nille.http.route.RouteRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.EventLoopGroup;
@@ -13,14 +13,15 @@ import java.net.InetSocketAddress;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class DefaultHttpServer implements HttpServer {
+public class ImmutableHttpServer implements HttpServer {
 
     static final boolean SSL = System.getProperty("ssl") != null;
 
     private final int port;
     private final RouteRegistry registry;
+    
 
-    public DefaultHttpServer(int port, final RouteRegistry registry) {
+    public ImmutableHttpServer(int port, final RouteRegistry registry) {
         this.port = port;
         this.registry = registry;
     }

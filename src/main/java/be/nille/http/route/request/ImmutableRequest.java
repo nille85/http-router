@@ -19,7 +19,7 @@ import lombok.Getter;
  * @author nholvoet
  */
 @Getter
-public class DefaultRequest implements Request {
+public class ImmutableRequest implements Request {
     
     private final Method method;
     
@@ -30,11 +30,11 @@ public class DefaultRequest implements Request {
     private final Body body;
     
     
-    public DefaultRequest(final URI uri){
+    public ImmutableRequest(final URI uri){
         this(new Method(Method.GET), uri, new Body(""), new HashMap<>());
     }
     
-    public DefaultRequest(final Method method, final URI uri, final Body body, Map<String,String> headers){
+    public ImmutableRequest(final Method method, final URI uri, final Body body, Map<String,String> headers){
         this.method = method;
         this.uri = uri;
         this.headers = headers;

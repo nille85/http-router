@@ -5,10 +5,12 @@
  */
 package be.nille.http;
 
+import be.nille.http.route.HttpRouter;
+import be.nille.http.route2.RouteBuilder;
 import be.nille.http.route2.Route;
-import be.nille.http.route2.RouteRegistry;
-import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
+import be.nille.http.route.response.ResponseBuilder;
+import be.nille.http.route2.Method;
 
 /**
  *
@@ -24,16 +26,32 @@ public class Main {
             port = 8080;
         }
         
+       
+        HttpRouter router = new HttpRouter()
+                .listenTo(port);
         
         
-
-        RouteRegistry registry = new RouteRegistry()
-                .withRoute(new Route("GET","/subscriptions/{subscriptionId}",(request) -> new DefaultResponse(new Response.Body("sdmlkfsd"))
-                ))
-                .withRoute(new Route("POST","/subscriptions",(request) -> new DefaultResponse(new Response.Body("sdmlkfsd")))
-                );
         
-        new DefaultHttpServer(port, registry).run();
+        router.withRoutes()           
+                    .add(Route.builder()
+                            .withMethod(Method.POST)
+                            .withPath("/subscriptions")
+                            .withHandler(
+                                (request) -> Response.builder().withBody("this is my content").build())
+                            .build()
+                    ).save();
+        
+        
+        router.withRoutes()
+                    .add(new RouteBuilder()
+                            .withHandler((request) -> new Response(new Response.Body("sdmlkfsd")))
+                            .withMethod(Method.GET)
+                            .withPath("/subscriptions/{subscriptionId}")
+                            .build()
+                    )
+                    .save();      
+        
+        router.start();
     }
     
 }

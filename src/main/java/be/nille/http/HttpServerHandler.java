@@ -9,11 +9,11 @@ import be.nille.http.route.MethodNotAllowedException;
 
 import be.nille.http.route.ResourceNotFoundException;
 
-import be.nille.http.route2.RouteRegistry;
-import be.nille.http.route.request.DefaultRequest;
+import be.nille.http.route.RouteRegistry;
+import be.nille.http.route.request.ImmutableRequest;
 import be.nille.http.route.request.Request;
-import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
+import be.nille.http.route.response.ResponseBuilder;
 import be.nille.http.route.response.Response.ContentType;
 import be.nille.http.route.response.Response.StatusCode;
 import be.nille.http.route2.Method;
@@ -84,24 +84,24 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 StringBuilder sb = new StringBuilder();
                 Response response;
                 try {
-                    Request request = new DefaultRequest(method, new URI(httpRequest.uri()), body, getHeaders(httpRequest));
+                    Request request = new ImmutableRequest(method, new URI(httpRequest.uri()), body, getHeaders(httpRequest));
                     Route route = registry.find(request);
                     response = route.getHandler().handle(request);
                 } catch (MethodNotAllowedException ex) {
                     log.info(ex.getMessage());
-                    response = new DefaultResponse(
+                    response = new Response(
                             new Response.Body(""), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), new ContentType("text/html; charset=utf-8"), new HashMap<>()
                     );
                     sb.append("METHOD NOT ALLOWED");
                 } catch (ResourceNotFoundException ex) {
                     log.info(ex.getMessage());
-                    response = new DefaultResponse(
+                    response = new Response(
                             new Response.Body(""), new StatusCode(StatusCode.NOT_FOUND), new ContentType("text/html; charset=utf-8"), new HashMap<>()
                     );
 
                 } catch (Exception ex) {
                     log.info(ex.getMessage());
-                    response = new DefaultResponse(
+                    response = new Response(
                             new Response.Body(""), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), new ContentType("text/html; charset=utf-8"), new HashMap<>()
                     );
 

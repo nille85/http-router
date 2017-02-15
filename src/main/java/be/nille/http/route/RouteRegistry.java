@@ -3,11 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route2;
+package be.nille.http.route;
 
 import be.nille.http.route.MethodNotAllowedException;
 import be.nille.http.route.ResourceNotFoundException;
 import be.nille.http.route.request.Request;
+import be.nille.http.route2.Route;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +23,21 @@ public class RouteRegistry {
 
     @Getter
     private final List<Route> routes;
+    private HttpRouter router;
 
-    public RouteRegistry() {
+    public RouteRegistry(final HttpRouter router) {
         routes = new ArrayList<>();
+        this.router = router;
     }
+    
 
-    public RouteRegistry withRoute(final Route route) {
+    public RouteRegistry add(final Route route) {
         this.routes.add(route);
         return this;
+    }
+    
+    public HttpRouter save(){
+        return router;
     }
 
     public Route find(Request request) {

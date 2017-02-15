@@ -22,7 +22,7 @@ public class DefaultRequestTest {
     
     @Test
     public void shouldHaveRightAmountOfParameters() throws URISyntaxException{
-        Request request = new DefaultRequest(new URI("http://youhost.com/test?param1=abc&param2=def&param2=ghi"));
+        Request request = new ImmutableRequest(new URI("http://youhost.com/test?param1=abc&param2=def&param2=ghi"));
         Map<String,List<String>> paramMap= request.getQueryParameters();     
         assertTrue(paramMap.size() == 2);
     }

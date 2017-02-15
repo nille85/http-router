@@ -6,12 +6,10 @@
 package be.nille.http.route;
 
 import be.nille.http.route.request.Request;
-import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.Response.Body;
 import be.nille.http.route2.RequestHandler;
 import be.nille.http.route2.Route;
-import be.nille.http.route2.RouteRegistry;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 
@@ -25,10 +23,10 @@ public class RouteRegistryTest {
     
     @Test
     public void testRegistry(){
-        RouteRegistry registry = new RouteRegistry()
-                .withRoute(new Route("GET", "/subscriptions/{subscriptionId}",new MyRequestHandler())
+        RouteRegistry registry = new RouteRegistry(new HttpRouter())
+                .add(new Route("GET", "/subscriptions/{subscriptionId}",new MyRequestHandler())
                 )
-                .withRoute(new Route("POST", "/subscriptions",new MyRequestHandler())
+                .add(new Route("POST", "/subscriptions",new MyRequestHandler())
                 );
         
        assertTrue(registry.getRoutes().size() == 2);
@@ -41,7 +39,7 @@ public class RouteRegistryTest {
 
         @Override
         public Response handle(Request request) {
-            return new DefaultResponse(new Body("this is a simple response"));
+            return new Response(new Body("this is a simple response"));
         }
         
     }

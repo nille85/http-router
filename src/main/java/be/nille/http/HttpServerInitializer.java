@@ -5,7 +5,7 @@
  */
 package be.nille.http;
 
-import be.nille.http.route2.RouteRegistry;
+import be.nille.http.route.RouteRegistry;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.socket.SocketChannel;

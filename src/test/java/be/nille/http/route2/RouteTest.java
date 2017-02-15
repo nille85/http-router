@@ -5,10 +5,10 @@
  */
 package be.nille.http.route2;
 
-import be.nille.http.route.request.DefaultRequest;
+import be.nille.http.route.request.ImmutableRequest;
 import be.nille.http.route.request.Request;
-import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
+import be.nille.http.route.response.ResponseBuilder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import static junit.framework.Assert.assertFalse;
@@ -24,9 +24,9 @@ public class RouteTest {
     @Test
     public void pathShouldMatchWhenSameAsInURL() throws URISyntaxException{
         Route route = new Route(new Method(Method.GET),new Path("/subscriber/1/search"), 
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new Response(new Response.Body("content")));
         
-        Request request = new DefaultRequest(new URI("http://localhost:8080/subscriber/1/search"));
+        Request request = new ImmutableRequest(new URI("http://localhost:8080/subscriber/1/search"));
         
         assertTrue(route.matchesResource(request));
     }
