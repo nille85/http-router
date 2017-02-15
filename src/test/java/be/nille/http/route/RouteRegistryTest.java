@@ -6,6 +6,7 @@
 package be.nille.http.route;
 
 import be.nille.http.route.request.Request;
+import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.Response.Body;
 import be.nille.http.route2.RequestHandler;
@@ -39,7 +40,7 @@ public class RouteRegistryTest {
 
         @Override
         public Response handle(Request request) {
-            return new Response(new Body("this is a simple response"));
+            return new DefaultResponse(new Body("this is a simple response"));
         }
         
     }

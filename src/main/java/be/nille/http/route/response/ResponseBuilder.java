@@ -6,11 +6,9 @@
 package be.nille.http.route.response;
 
 import be.nille.http.route.response.Response.Body;
-import be.nille.http.route.response.Response.ContentType;
 import be.nille.http.route.response.Response.StatusCode;
 import java.util.HashMap;
 import java.util.Map;
-import lombok.Getter;
 
 /**
  *
@@ -21,13 +19,12 @@ public class ResponseBuilder {
     private final Map<String,String> headers;
     private String body;
     private int statusCode;
-    private String contentType;
+   
     
     public ResponseBuilder(){
         headers = new HashMap<>();
         body = "";
         statusCode = StatusCode.OK;
-        contentType = "text/plain; charset=UTF-8";      
     }
 
     public ResponseBuilder withHeader(final String key, final String value){
@@ -44,15 +41,10 @@ public class ResponseBuilder {
         this.statusCode = statusCode;
         return this;
     }
-
-    public ResponseBuilder withContentType(final String contentType){
-        this.contentType = contentType;
-        return this;
-    }
     
     public Response build(){
-        return new Response(
-                new Body(body), new StatusCode(statusCode), new ContentType(contentType), headers);
+        return new DefaultResponse(
+                new Body(body), new StatusCode(statusCode), headers);
     }
 
    

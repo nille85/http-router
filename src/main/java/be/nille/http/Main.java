@@ -6,10 +6,7 @@
 package be.nille.http;
 
 import be.nille.http.route.HttpRouter;
-import be.nille.http.route.RouteBuilder;
-import be.nille.http.route2.Route;
 import be.nille.http.route.response.Response;
-import be.nille.http.route.response.ResponseBuilder;
 import be.nille.http.route2.Method;
 
 /**
@@ -42,28 +39,7 @@ public class Main {
         
         
         router.start();
-        
-        /*
-        router.withRoutes()           
-                    .add(Route.builder()
-                            .withMethod(Method.POST)
-                            .withPath("/subscriptions")
-                            .withHandler(
-                                (request) -> Response.builder().withBody("this is my content").build())
-                            .build()
-                    ).save();
-        
-        
-        router.withRoutes()
-                    .add(new RouteBuilder()
-                            .withHandler((request) -> new Response(new Response.Body("sdmlkfsd")))
-                            .withMethod(Method.GET)
-                            .withPath("/subscriptions/{subscriptionId}")
-                            .build()
-                    )
-                    .save();      
-        
-       */
+       
     }
     
 }

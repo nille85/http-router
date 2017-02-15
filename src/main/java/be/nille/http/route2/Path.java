@@ -28,28 +28,5 @@ public class Path {
         this.value = value;
     }
     
-    public boolean matches(final String requestPath){
-        String valueWithWildcards = value.replaceAll("\\{.*\\}", "(.*)");
-        String patternString =  "^" + valueWithWildcards + "(\\?.*)?$";
-        Pattern pattern = Pattern.compile(patternString);
-        Matcher matcher = pattern.matcher(requestPath);
-        
-        boolean matches = matcher.matches();
-        return matches;
-    }
-    
-    public List<String> getVariables(){
-        List<String> variables = new ArrayList<>();       
-        Pattern pattern = Pattern.compile("\\{([^\\{\\}]*)\\}");
-        Matcher matcher = pattern.matcher(value);
-        while (matcher.find()) {
-            variables.add(matcher.group(1));
-        }        
-        return variables;
-    }
-
-   
-    
-    
     
 }

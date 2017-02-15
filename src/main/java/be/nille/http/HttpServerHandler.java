@@ -12,9 +12,8 @@ import be.nille.http.route.ResourceNotFoundException;
 import be.nille.http.route.RouteRegistry;
 import be.nille.http.route.request.ImmutableRequest;
 import be.nille.http.route.request.Request;
+import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
-import be.nille.http.route.response.ResponseBuilder;
-import be.nille.http.route.response.Response.ContentType;
 import be.nille.http.route.response.Response.StatusCode;
 import be.nille.http.route2.Method;
 import be.nille.http.route2.Route;
@@ -89,20 +88,20 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                     response = route.getHandler().handle(request);
                 } catch (MethodNotAllowedException ex) {
                     log.info(ex.getMessage());
-                    response = new Response(
-                            new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), new ContentType("text/html; charset=utf-8"), new HashMap<>()
+                    response = new DefaultResponse(
+                            new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
                     );
                     sb.append("METHOD NOT ALLOWED");
                 } catch (ResourceNotFoundException ex) {
                     log.info(ex.getMessage());
-                    response = new Response(
-                            new Response.Body("not found"), new StatusCode(StatusCode.NOT_FOUND), new ContentType("text/html; charset=utf-8"), new HashMap<>()
+                    response = new DefaultResponse(
+                            new Response.Body("not found"), new StatusCode(StatusCode.NOT_FOUND), getDefaultHeaders()
                     );
 
                 } catch (Exception ex) {
                     log.info(ex.getMessage());
-                    response = new Response(
-                            new Response.Body(""), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), new ContentType("text/html; charset=utf-8"), new HashMap<>()
+                    response = new DefaultResponse(
+                            new Response.Body(""), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), getDefaultHeaders()
                     );
 
                 }
@@ -114,6 +113,12 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             }
         }
 
+    }
+    
+    private Map<String,String> getDefaultHeaders(){
+        Map<String,String> headers = new HashMap<>();
+        headers.put("Content-Type", "text/html");
+        return headers;
     }
 
     private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, Response resp) {

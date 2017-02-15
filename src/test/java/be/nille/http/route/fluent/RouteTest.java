@@ -8,6 +8,7 @@ package be.nille.http.route.fluent;
 import be.nille.http.route.HttpRouter;
 import be.nille.http.route.RouteBuilder;
 import be.nille.http.route.request.Request;
+import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.ResponseBuilder;
 import be.nille.http.route2.Route;
@@ -36,7 +37,7 @@ public class RouteTest {
 
         @Override
         public Response handle(Request request) {
-            return new Response(new Response.Body("this is a simple response"));
+            return new DefaultResponse(new Response.Body("this is a simple response"));
         }
         
     }
