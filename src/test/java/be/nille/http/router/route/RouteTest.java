@@ -90,7 +90,7 @@ public class RouteTest {
 
        
 
-        assertFalse(route.matchesResource("/subscriber/1/search"));
+        assertFalse(route.matchesResource("/subscription/1/search"));
     }
 
     @Test
@@ -101,7 +101,19 @@ public class RouteTest {
 
       
 
-        assertFalse(route.matchesResource("/subscriber/1/search"));
+        assertFalse(route.matchesResource("/subscription/1/search"));
+    }
+    
+    
+    @Test
+    public void test() throws URISyntaxException {
+
+        Route route = new Route(new Method(Method.POST), new Path("/:personId/persons"),
+                (request) -> new DefaultResponse(new Response.Body("content")));
+
+      
+
+        assertFalse(route.matchesResource("/subscriptions"));
     }
     
     

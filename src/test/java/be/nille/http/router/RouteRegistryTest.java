@@ -5,13 +5,14 @@
  */
 package be.nille.http.router;
 
-import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Path;
 import be.nille.http.router.route.RequestHandler;
 import be.nille.http.router.route.Route;
 import static junit.framework.Assert.assertTrue;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,6 +20,7 @@ import org.junit.Test;
  *
  * @author nholvoet
  */
+@Slf4j
 public class RouteRegistryTest {
     
    private RouteRegistry registry;
@@ -52,6 +54,16 @@ public class RouteRegistryTest {
     }
     
     
+    @Test
+    public void shouldNotFindRoute(){
+          
+       Route route = registry.find(new Method(Method.GET),"/subscriptions/20");
+       assertTrue(route.matchesMethod(new Method(Method.GET)));
+       assertTrue(route.matchesResource("/subscriptions/20"));
+            
+    }
+    
+    
     private static class TestRequestHandler implements RequestHandler{
 
         @Override
@@ -61,6 +73,33 @@ public class RouteRegistryTest {
                     .build();
         }
         
+    }
+    
+    
+    @Test(expected = MethodNotFoundException.class)
+    public void testx(){
+        
+        RouteRegistry reg = new RouteRegistry();
+        reg.add(
+                new Route(
+                        new Method(Method.GET),
+                        new Path("/subscriptions"),
+                       (request) -> Response.builder().build()
+                )
+        );
+        
+        
+        reg.add(
+                new Route(
+                        new Method(Method.POST),
+                        new Path("/:personId/persons"),
+                       (request) -> Response.builder().build()
+                        
+                )
+        );
+        
+        Route route = reg.find(new Method(Method.POST), "/subscriptions");
+        log.debug(route.toString());
     }
     
 }

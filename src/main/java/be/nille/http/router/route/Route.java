@@ -5,7 +5,6 @@
  */
 package be.nille.http.router.route;
 
-
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import java.util.ArrayList;
@@ -22,58 +21,53 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author nholvoet
  */
-
 @ToString
 @Slf4j
 public class Route {
-    
+
     @Getter
     private final Method method;
     @Getter
     private final Path path;
     private final RequestHandler successHandler;
-    
-    
-    public Route(final String method,final String path, final RequestHandler successHandler){
-        this(new Method(method),new Path(path), successHandler);
+
+    public Route(final String method, final String path, final RequestHandler successHandler) {
+        this(new Method(method), new Path(path), successHandler);
     }
-    
-    public Route(final Method method, final Path path,  final RequestHandler successHandler){
+
+    public Route(final Method method, final Path path, final RequestHandler successHandler) {
         this.method = method;
         this.path = path;
         this.successHandler = successHandler;
     }
-    
-    public Response execute(final Request request){
+
+    public Response execute(final Request request) {
         return successHandler.handle(request);
     }
-    
-    
-    public boolean matchesMethod(final Method method){
+
+    public boolean matchesMethod(final Method method) {
         return method.equals(this.method);
     }
-    
-    
-    public boolean matchesResource(final String requestPath){
-        final String pathValue = path.getValue();
-        String valueWithWildcards = pathValue.replaceAll(":.*/?", "(.*)");
-        String patternString =  "^" + valueWithWildcards + "(\\?.*)?$";
-        log.debug(patternString);
-        Pattern pattern = Pattern.compile(patternString);
-       
-        Matcher matcher = pattern.matcher(requestPath);
+
+    public boolean matchesResource(String requestPath) {
+        log.debug("checking if inputted requestPath " + requestPath + " matches " + path.getValue());
+        //when query string is present
+        requestPath = requestPath.split("\\?")[0];
+        String pathValue = path.getValue();
+        //when path variable is not at the end
+        String pattern = pathValue.replaceAll(":.*/", "(.*)/");
+        log.debug("checking if inputted requestPath " + requestPath + " matches " + pattern);
+        //when path variable is at the end
+        pattern = pattern.replaceAll(":.*[^/]", "(.*)");
+        Pattern p = Pattern.compile(pattern);
+
+        Matcher matcher = p.matcher(requestPath);
         boolean matches = matcher.matches();
+
+        log.debug("matches? " + matches);
         return matches;
+
     }
-    
-    
-   
-    
-    
-    
-    
-    
-    
-    
-    
+
+
 }

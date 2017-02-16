@@ -9,6 +9,7 @@ import be.nille.http.router.response.Response;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Route;
 import be.nille.http.router.netty.HttpServer;
+import be.nille.http.router.route.Path;
 import static junit.framework.Assert.assertEquals;
 
 import org.junit.Before;
@@ -25,15 +26,15 @@ import org.mockito.MockitoAnnotations;
  */
 public class HttpRouterTest {
     
-    @Mock
-    private HttpServer httpServer;
     
-    @InjectMocks
+    private HttpServer httpServer; 
+ 
     private HttpRouter router;
     
     @Before
     public void setup() throws Exception{
-        MockitoAnnotations.initMocks(this);
+        httpServer = Mockito.mock(HttpServer.class);
+        router = new HttpRouter(httpServer);
        
     }
     
@@ -85,6 +86,9 @@ public class HttpRouterTest {
         router.start();
       
     }
+    
+    
+    
     
     
     

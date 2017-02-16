@@ -36,8 +36,11 @@ public class MatchedRequest implements Request {
         Map<String,String> pathParams = new HashMap<>();
         List<String> keys = getKeys(route);
         List<String> values = getValues(request, route);
+        
         for(int i=0; i<keys.size();i++){
-            pathParams.put(keys.get(i), values.get(i));
+            String key = keys.get(i);
+            String value = values.get(i);
+            pathParams.put(key, value);
         }
         
         return pathParams;

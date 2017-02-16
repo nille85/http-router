@@ -5,20 +5,19 @@
  */
 package be.nille.http.router;
 
-import be.nille.http.router.request.Request;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Route;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  *
  * @author nholvoet
  */
+@Slf4j
 public class RouteRegistry {
 
     @Getter
@@ -48,7 +47,9 @@ public class RouteRegistry {
                 .stream()
                 .filter(route -> route.matchesResource(requestPath))
                 .collect(Collectors.toList());
-                
+       
+        log.debug("matching routes by path");
+        filteredRoutes.stream().forEach(route -> log.debug(route.toString()));
                 
         if (!filteredRoutes.isEmpty()) {
             return filteredRoutes;
@@ -65,8 +66,8 @@ public class RouteRegistry {
                 .stream()
                 .filter(route -> route.matchesMethod(method))
                 .collect(Collectors.toList());
-                
-                
+        log.debug("matching routes by method and path");      
+        filteredRoutes.stream().forEach(route -> log.debug(route.toString()));        
         if (!filteredRoutes.isEmpty()) {
             return filteredRoutes;
         }

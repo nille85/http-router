@@ -5,15 +5,18 @@
  */
 package be.nille.http.route.exception;
 
+import be.nille.http.router.HttpClientException;
 import be.nille.http.router.response.Response;
 
 /**
  *
  * @author nholvoet
  */
-public interface RouteExceptionHandler {
+public interface ExceptionHandler {
     
     
-    Response execute(HttpRouterException exception);
+    Response handleException(HttpClientException exception);
+    
+   
     
 }

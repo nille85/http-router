@@ -1,5 +1,6 @@
 package be.nille.http.router.netty;
 
+import be.nille.http.route.exception.ExceptionHandler;
 import be.nille.http.router.RouteRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -18,11 +19,13 @@ public class NettyHttpServer implements HttpServer {
     static final boolean SSL = System.getProperty("ssl") != null;
 
     private final int port;
-   
+    private final ExceptionHandler exceptionHandler;
     
 
-    public NettyHttpServer(int port) {
+    public NettyHttpServer(final int port, final ExceptionHandler exceptionHandler) {
         this.port = port;
+        this.exceptionHandler = exceptionHandler;
+        
         
     }
 
@@ -44,7 +47,7 @@ public class NettyHttpServer implements HttpServer {
         try {
             b.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .childHandler(new HttpServerInitializer(sslCtx, registry))
+                    .childHandler(new HttpServerInitializer(sslCtx, registry, exceptionHandler))
                     .localAddress(new InetSocketAddress(port));
 
             Channel ch = b.bind().sync().channel();

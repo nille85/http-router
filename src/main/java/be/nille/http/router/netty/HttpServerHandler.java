@@ -5,6 +5,8 @@
  */
 package be.nille.http.router.netty;
 
+import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.HttpClientException;
 import be.nille.http.router.MethodNotFoundException;
 import be.nille.http.router.PathNotFoundException;
 
@@ -45,11 +47,13 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
 
     private final RouteRegistry registry;
+    private final ExceptionHandler exceptionHandler;
     private HttpRequest httpRequest;
     private HttpContent httpContent;
 
-    public HttpServerHandler(final RouteRegistry registry) {
+    public HttpServerHandler(final RouteRegistry registry,final ExceptionHandler exceptionHandler) {
         this.registry = registry;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -73,35 +77,18 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 LastHttpContent trailer = (LastHttpContent) msg;
                
                 Response response;
+                Request  nettyRequest = new NettyRequest(httpRequest, httpContent);
+                
                 try {
-                    
-                    Request nettyRequest = new NettyRequest(httpRequest, httpContent);
+                  
                     Route route = registry.find(nettyRequest.getMethod(),nettyRequest.getUri().getPath());
+                    log.info(String.format("Route found with method %s and path %s", route.getMethod(), route.getPath()));
                     Request matchedRequest = new MatchedRequest(route, nettyRequest);
                     response = route.execute(matchedRequest);
                     
-                } catch (MethodNotFoundException ex) {
-                    log.info(ex.getMessage());
-                    response = new DefaultResponse(
-                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
-                    );
-                   
-                } catch (PathNotFoundException ex) {
-                    log.info(ex.getMessage());
-                    response = new DefaultResponse(
-                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.NOT_FOUND), getDefaultHeaders()
-                    );
-
-                } 
-                
-                catch (Exception ex) {
-                    log.info(ex.getMessage());
-                    response = new DefaultResponse(
-                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), getDefaultHeaders()
-                    );
-                    
-                   
-
+                } catch (Exception ex) {
+                    HttpClientException clientException = new HttpClientException(nettyRequest, ex);
+                    response = exceptionHandler.handleException(clientException);
                 }
 
                 if (!writeResponse(trailer, ctx, response)) {

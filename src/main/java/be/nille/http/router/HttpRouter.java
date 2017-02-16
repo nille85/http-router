@@ -5,6 +5,8 @@
  */
 package be.nille.http.router;
 
+import be.nille.http.route.exception.DefaultExceptionHandler;
+import be.nille.http.route.exception.ExceptionHandler;
 import be.nille.http.router.netty.NettyHttpServer;
 import be.nille.http.router.netty.HttpServer;
 import be.nille.http.router.route.Route;
@@ -19,15 +21,24 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpRouter {
     
     private final RouteRegistry registry;
+   
     private final HttpServer httpServer;
     
     
     public HttpRouter(final int port){
-        this(new NettyHttpServer(new Port(port).getValue()));
+        this(new NettyHttpServer(new Port(port).getValue(),new DefaultExceptionHandler()));
+    }
+    
+     public HttpRouter(final int port, final ExceptionHandler exceptionHandler){
+        this(new NettyHttpServer(new Port(port).getValue(),  exceptionHandler));
     }
     
     public HttpRouter(final Port port){
-        this(new NettyHttpServer(port.getValue()));
+        this(new NettyHttpServer(port.getValue(),  new DefaultExceptionHandler()));
+    }
+    
+    public HttpRouter(final Port port, final ExceptionHandler exceptionHandler){
+        this(new NettyHttpServer(port.getValue(),  exceptionHandler));
     }
     
     public HttpRouter(final HttpServer httpServer){

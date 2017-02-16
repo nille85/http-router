@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.netty;
 
+import be.nille.http.route.exception.ExceptionHandler;
 import be.nille.http.router.RouteRegistry;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
@@ -22,10 +23,12 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
 
     private final SslContext sslCtx;
     private final RouteRegistry registry;
+    private final ExceptionHandler exceptionHandler;
 
-    public HttpServerInitializer(SslContext sslCtx, final RouteRegistry registry) {
+    public HttpServerInitializer(SslContext sslCtx, final RouteRegistry registry, final ExceptionHandler exceptionHandler) {
         this.sslCtx = sslCtx;
         this.registry = registry;
+        this.exceptionHandler = exceptionHandler;
     }
 
     @Override
@@ -43,6 +46,6 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
         p.addLast("encoder", new HttpResponseEncoder());
         // Remove the following line if you don't want automatic content compression. 
         p.addLast("deflater", new HttpContentCompressor());
-        p.addLast("handler", new HttpServerHandler( registry));
+        p.addLast("handler", new HttpServerHandler( registry, exceptionHandler));
     }
 }
