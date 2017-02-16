@@ -6,7 +6,7 @@
 package be.nille.http.router.netty;
 
 import be.nille.http.route.exception.HttpRouterException;
-import be.nille.http.route.request.Request;
+import be.nille.http.router.request.Request;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Route;
 import io.netty.buffer.ByteBuf;

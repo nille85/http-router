@@ -5,7 +5,7 @@
  */
 package be.nille.http.router;
 
-import be.nille.http.route.request.Request;
+import be.nille.http.router.request.Request;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Route;
 import java.net.URI;

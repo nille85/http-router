@@ -9,7 +9,7 @@ import be.nille.http.router.MethodNotFoundException;
 import be.nille.http.router.PathNotFoundException;
 
 import be.nille.http.router.RouteRegistry;
-import be.nille.http.route.request.Request;
+import be.nille.http.router.request.Request;
 import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.Response.StatusCode;
@@ -122,7 +122,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
     private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, Response resp) {
         // Decide whether to close the connection or not.
         boolean keepAlive = HttpHeaders.isKeepAlive(httpRequest);
-        // Build the response object.
+         // Build the response object.
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
                 Unpooled.copiedBuffer(resp.getBody().getValue(), CharsetUtil.UTF_8));
@@ -134,6 +134,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
             response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
+        
+        
 
         response.setStatus(new HttpResponseStatus(resp.getStatusCode().getValue(), ""));
 

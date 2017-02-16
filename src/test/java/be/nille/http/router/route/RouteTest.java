@@ -3,13 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route2;
+package be.nille.http.router.route;
 
 import be.nille.http.router.route.Path;
 import be.nille.http.router.route.Route;
 import be.nille.http.router.route.Method;
-import be.nille.http.route.request.DefaultRequest;
-import be.nille.http.route.request.Request;
+import be.nille.http.router.request.DefaultRequest;
+import be.nille.http.router.request.Request;
 import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.ResponseBuilder;

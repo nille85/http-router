@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route.request;
+package be.nille.http.router.request;
 
 
 import be.nille.http.router.route.Method;
