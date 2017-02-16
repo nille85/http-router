@@ -6,7 +6,7 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
-import be.nille.http.route.response.Response;
+import be.nille.http.router.response.Response;
 
 /**
  *

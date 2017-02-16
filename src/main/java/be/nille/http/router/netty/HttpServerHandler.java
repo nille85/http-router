@@ -10,9 +10,9 @@ import be.nille.http.router.PathNotFoundException;
 
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.request.Request;
-import be.nille.http.route.response.DefaultResponse;
-import be.nille.http.route.response.Response;
-import be.nille.http.route.response.Response.StatusCode;
+import be.nille.http.router.response.DefaultResponse;
+import be.nille.http.router.response.Response;
+import be.nille.http.router.response.Response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
 import be.nille.http.router.route.Route;
 import io.netty.buffer.Unpooled;

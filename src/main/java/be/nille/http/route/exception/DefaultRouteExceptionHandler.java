@@ -7,9 +7,9 @@ package be.nille.http.route.exception;
 
 import be.nille.http.router.PathNotFoundException;
 import be.nille.http.router.MethodNotFoundException;
-import be.nille.http.route.response.Response;
-import be.nille.http.route.response.Response.StatusCode;
-import be.nille.http.route.response.ResponseBuilder;
+import be.nille.http.router.response.Response;
+import be.nille.http.router.response.Response.StatusCode;
+import be.nille.http.router.response.ResponseBuilder;
 import lombok.extern.slf4j.Slf4j;
 
 /**

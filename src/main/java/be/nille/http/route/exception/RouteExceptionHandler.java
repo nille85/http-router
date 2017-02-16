@@ -5,7 +5,7 @@
  */
 package be.nille.http.route.exception;
 
-import be.nille.http.route.response.Response;
+import be.nille.http.router.response.Response;
 
 /**
  *

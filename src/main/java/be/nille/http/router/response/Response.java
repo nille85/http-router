@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route.response;
+package be.nille.http.router.response;
 
-import be.nille.http.route.response.Response.Body;
-import be.nille.http.route.response.Response.StatusCode;
+import be.nille.http.router.response.Response.Body;
+import be.nille.http.router.response.Response.StatusCode;
 import java.util.Map;
 import lombok.Getter;
 
