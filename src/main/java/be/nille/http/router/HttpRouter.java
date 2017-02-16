@@ -7,7 +7,7 @@ package be.nille.http.router;
 
 import be.nille.http.router.netty.NettyHttpServer;
 import be.nille.http.router.netty.HttpServer;
-import be.nille.http.route2.Route;
+import be.nille.http.router.route.Route;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,6 +22,10 @@ public class HttpRouter {
     private final HttpServer httpServer;
     
     
+    public HttpRouter(final int port){
+        this(new NettyHttpServer(new Port(port).getValue()));
+    }
+    
     public HttpRouter(final Port port){
         this(new NettyHttpServer(port.getValue()));
     }
@@ -30,8 +34,7 @@ public class HttpRouter {
         this.registry = new RouteRegistry();
         this.httpServer = httpServer;
     }
-       
-    
+          
     public HttpRouter addRoute(final Route route){
         this.registry.add(route);
         log.info(String.format("Route added with path %s and method %s", route.getPath(), route.getMethod()));

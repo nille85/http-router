@@ -20,8 +20,6 @@ public interface Response {
 
     StatusCode getStatusCode();
 
-    
-
     Map<String, String> getHeaders();
 
     static ResponseBuilder builder() {

@@ -6,8 +6,8 @@
 package be.nille.http.route.request;
 
 import be.nille.http.route.request.Request.Body;
-import be.nille.http.route2.Method;
-import be.nille.http.route2.Route;
+import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Route;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;
@@ -27,7 +27,7 @@ public class RequestBuilder {
   
     private final Map<String,String> headers;
     
-    private Route route;
+    
     
     private Request.Body body;
     
@@ -63,22 +63,17 @@ public class RequestBuilder {
         headers.put(key, value);
         return this;
     }
-    
-    public RequestBuilder withRoute(final Route route){
-        this.route = route;
-        return this;
-    }
+   
     
     
     public Request build(){
         validate();
-        return new DefaultRequest(this.method, this.uri,this.body, headers, route);
+        return new DefaultRequest(this.method, this.uri,this.body, headers);
     }
     
     private void validate(){
         checkNotNull(method, "method is a required field");
         checkNotNull(uri, "uri is a required field");
-        checkNotNull(route, "route is a required field");
         checkArgument(body.getValue() != null, "body is a required field");
     }
     

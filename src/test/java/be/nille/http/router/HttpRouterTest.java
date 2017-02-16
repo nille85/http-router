@@ -6,8 +6,8 @@
 package be.nille.http.router;
 
 import be.nille.http.route.response.Response;
-import be.nille.http.route2.Method;
-import be.nille.http.route2.Route;
+import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Route;
 import be.nille.http.router.netty.HttpServer;
 import static junit.framework.Assert.assertEquals;
 

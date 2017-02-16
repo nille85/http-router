@@ -9,15 +9,12 @@ import be.nille.http.router.MethodNotFoundException;
 import be.nille.http.router.PathNotFoundException;
 
 import be.nille.http.router.RouteRegistry;
-import be.nille.http.route.exception.HttpRouterException;
-import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.DefaultResponse;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.Response.StatusCode;
-import be.nille.http.route2.Method;
-import be.nille.http.route2.Route;
-import io.netty.buffer.ByteBuf;
+import be.nille.http.router.route.MatchedRequest;
+import be.nille.http.router.route.Route;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -36,7 +33,6 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -75,31 +71,25 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             if (msg instanceof LastHttpContent) {
 
                 LastHttpContent trailer = (LastHttpContent) msg;
-           
                
                 Response response;
                 try {
                     
-                    Method method = new Method(httpRequest.method().name());
-                    Request.Body body = new Request.Body(getRequestBody(httpContent));
-                    
-                    String requestPath = new URI(httpRequest.uri()).getPath();
-                    Route route = registry.find(method,requestPath);//possibly throws exception
-                    Request request = new DefaultRequest(
-                            method, new URI(httpRequest.uri()), body, getHeaders(httpRequest), route
-                    );
-                    response = route.execute(request);
+                    Request nettyRequest = new NettyRequest(httpRequest, httpContent);
+                    Route route = registry.find(nettyRequest.getMethod(),nettyRequest.getUri().getPath());
+                    Request matchedRequest = new MatchedRequest(route, nettyRequest);
+                    response = route.execute(matchedRequest);
                     
                 } catch (MethodNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
-                            new Response.Body("not allowed"), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
+                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.METHOD_NOT_ALLOWED), getDefaultHeaders()
                     );
                    
                 } catch (PathNotFoundException ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
-                            new Response.Body("not found"), new StatusCode(StatusCode.NOT_FOUND), getDefaultHeaders()
+                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.NOT_FOUND), getDefaultHeaders()
                     );
 
                 } 
@@ -107,7 +97,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 catch (Exception ex) {
                     log.info(ex.getMessage());
                     response = new DefaultResponse(
-                            new Response.Body(""), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), getDefaultHeaders()
+                            new Response.Body(ex.getMessage()), new StatusCode(StatusCode.INTERNAL_SERVER_ERROR), getDefaultHeaders()
                     );
                     
                    
@@ -163,24 +153,5 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
         ctx.close();
     }
 
-    private  String getRequestBody(HttpContent content) {
-        ByteBuf buff = content.content();
-        if (buff.isReadable()) {
-            return buff.toString(CharsetUtil.UTF_8);
-        }
-        return "";
-    }
-
-    private Map<String, String> getHeaders(HttpRequest request) {
-        HttpHeaders headers = request.headers();
-
-        Map<String, String> copiedHeaders = new HashMap<>();
-        if (!headers.isEmpty()) {
-            for (Map.Entry<String, String> h : headers) {
-                copiedHeaders.put(h.getKey(), h.getValue());
-
-            }
-        }
-        return copiedHeaders;
-    }
+   
 }

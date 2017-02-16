@@ -6,8 +6,8 @@
 package be.nille.http.router;
 
 import be.nille.http.route.request.Request;
-import be.nille.http.route2.Method;
-import be.nille.http.route2.Route;
+import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Route;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;

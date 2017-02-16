@@ -5,6 +5,9 @@
  */
 package be.nille.http.route2;
 
+import be.nille.http.router.route.Path;
+import be.nille.http.router.route.Route;
+import be.nille.http.router.route.Method;
 import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;
 import be.nille.http.route.response.DefaultResponse;
