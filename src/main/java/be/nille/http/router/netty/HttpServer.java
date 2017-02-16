@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http;
+package be.nille.http.router.netty;
+
+import be.nille.http.router.RouteRegistry;
 
 /**
  *
@@ -11,5 +13,5 @@ package be.nille.http;
  */
 public interface HttpServer {
     
-    void run() throws Exception;
+    void run(RouteRegistry routeRegistry) throws Exception;
 }

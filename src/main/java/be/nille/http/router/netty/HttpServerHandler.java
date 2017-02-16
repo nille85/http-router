@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http;
+package be.nille.http.router.netty;
 
 import be.nille.http.route.MethodNotFoundException;
 import be.nille.http.route.exception.PathNotFoundException;
 
-import be.nille.http.route.RouteRegistry;
+import be.nille.http.router.RouteRegistry;
 import be.nille.http.route.exception.HttpRouterException;
 import be.nille.http.route.request.DefaultRequest;
 import be.nille.http.route.request.Request;

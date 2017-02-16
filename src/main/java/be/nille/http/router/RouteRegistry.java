@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.route;
+package be.nille.http.router;
 
+import be.nille.http.route.MethodNotFoundException;
 import be.nille.http.route.exception.PathNotFoundException;
 import be.nille.http.route.request.Request;
 import be.nille.http.route2.Method;
