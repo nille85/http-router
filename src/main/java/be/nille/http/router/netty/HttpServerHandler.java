@@ -7,20 +7,18 @@ package be.nille.http.router.netty;
 
 import be.nille.http.route.exception.ExceptionHandler;
 import be.nille.http.router.HttpClientException;
-import be.nille.http.router.MethodNotFoundException;
-import be.nille.http.router.PathNotFoundException;
 
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.request.Request;
-import be.nille.http.router.response.DefaultResponse;
 import be.nille.http.router.response.Response;
-import be.nille.http.router.response.Response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
 import be.nille.http.router.route.Route;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.SimpleChannelInboundHandler;
+
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
@@ -35,7 +33,6 @@ import static io.netty.handler.codec.http.HttpResponseStatus.OK;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
-import java.util.HashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,10 +41,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
+public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
 
     private final RouteRegistry registry;
     private final ExceptionHandler exceptionHandler;
+    
     private HttpRequest httpRequest;
     private HttpContent httpContent;
 
@@ -62,7 +60,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         if (msg instanceof HttpRequest) {
 
             this.httpRequest = (HttpRequest) msg;
@@ -77,7 +75,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                 LastHttpContent trailer = (LastHttpContent) msg;
                
                 Response response;
-                Request  nettyRequest = new NettyRequest(httpRequest, httpContent);
+                Request nettyRequest = new NettyRequest(httpRequest, httpContent);
                 
                 try {
                   
@@ -99,12 +97,7 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
         }
 
     }
-    
-    private Map<String,String> getDefaultHeaders(){
-        Map<String,String> headers = new HashMap<>();
-        headers.put("Content-Type", "text/html");
-        return headers;
-    }
+
 
     private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, Response resp) {
         // Decide whether to close the connection or not.
@@ -122,8 +115,6 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
             response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
         
-        
-
         response.setStatus(new HttpResponseStatus(resp.getStatusCode().getValue(), ""));
 
         for (Map.Entry<String, String> header : resp.getHeaders().entrySet()) {
