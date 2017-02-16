@@ -1,4 +1,4 @@
-# nio-http-server
+# HTTP Router
 A non blocking object-oriented HTTP server based on Netty
 
 
