@@ -5,8 +5,8 @@
  */
 package be.nille.http.router.netty;
 
-import be.nille.http.route.MethodNotFoundException;
-import be.nille.http.route.exception.PathNotFoundException;
+import be.nille.http.router.MethodNotFoundException;
+import be.nille.http.router.PathNotFoundException;
 
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.route.exception.HttpRouterException;
@@ -83,7 +83,8 @@ public class HttpServerHandler extends SimpleChannelInboundHandler<Object> {
                     Method method = new Method(httpRequest.method().name());
                     Request.Body body = new Request.Body(getRequestBody(httpContent));
                     
-                    Route route = registry.find(method,new URI(httpRequest.uri()));//possibly throws exception
+                    String requestPath = new URI(httpRequest.uri()).getPath();
+                    Route route = registry.find(method,requestPath);//possibly throws exception
                     Request request = new DefaultRequest(
                             method, new URI(httpRequest.uri()), body, getHeaders(httpRequest), route
                     );

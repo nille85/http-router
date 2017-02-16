@@ -5,7 +5,8 @@
  */
 package be.nille.http.route.exception;
 
-import be.nille.http.route.MethodNotFoundException;
+import be.nille.http.router.PathNotFoundException;
+import be.nille.http.router.MethodNotFoundException;
 import be.nille.http.route.response.Response;
 import be.nille.http.route.response.Response.StatusCode;
 import be.nille.http.route.response.ResponseBuilder;

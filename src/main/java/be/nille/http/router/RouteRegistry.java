@@ -5,8 +5,6 @@
  */
 package be.nille.http.router;
 
-import be.nille.http.route.MethodNotFoundException;
-import be.nille.http.route.exception.PathNotFoundException;
 import be.nille.http.route.request.Request;
 import be.nille.http.route2.Method;
 import be.nille.http.route2.Route;
@@ -32,35 +30,53 @@ public class RouteRegistry {
        
     }
     
-
     public RouteRegistry add(final Route route) {
         this.routes.add(route);
         return this;
     }
     
-
-    public Route find(Method method, URI requestURI) {
+    public Route find(Method method, String requestPath) {
+        List<Route> filteredByPath = findRoutesByPath(this.routes,requestPath);
+        List<Route> filteredByMethod = findRoutesByMethod(filteredByPath, method);
+        return filteredByMethod.get(0);
+    }
+    
+    
+    private List<Route> findRoutesByPath(List<Route> routes, String requestPath){
         List<Route> filteredRoutes
-                = this.routes
+                = routes
                 .stream()
-                .filter(route -> route.matchesResource(requestURI.getPath()))
+                .filter(route -> route.matchesResource(requestPath))
                 .collect(Collectors.toList());
-        
+                
+                
         if (!filteredRoutes.isEmpty()) {
-            Optional<Route> optional = filteredRoutes.stream()
-                    .filter(route -> route.matchesMethod(method))
-                    .findFirst();
-            return optional.orElseThrow(() -> new MethodNotFoundException(
-                            String.format("The method %s at the URI path %s is not allowed", 
-                                    method.getName(),
-                                    requestURI.getPath())
-                    ));
+            return filteredRoutes;
         }
-       
         throw new PathNotFoundException(
-                String.format("The resource at the URI path %s was not found", requestURI.getPath())
+                String.format("The resource at the path %s was not found", requestPath)
         );
-
+        
+    }
+    
+    private List<Route> findRoutesByMethod(List<Route> routes, Method method){
+        List<Route> filteredRoutes
+                = routes
+                .stream()
+                .filter(route -> route.matchesMethod(method))
+                .collect(Collectors.toList());
+                
+                
+        if (!filteredRoutes.isEmpty()) {
+            return filteredRoutes;
+        }
+        throw new MethodNotFoundException(
+                String.format("The method at the current path %s is not allowed", 
+                                    method.getName()
+                                  
+                )
+        );
+        
     }
 
 }

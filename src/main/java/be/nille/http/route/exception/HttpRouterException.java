@@ -15,4 +15,8 @@ public class HttpRouterException extends RuntimeException {
     public HttpRouterException(final String message, final Throwable throwable){
         super(message, throwable);
     }
+    
+    public HttpRouterException(final String message){
+        super(message);
+    }
 }
