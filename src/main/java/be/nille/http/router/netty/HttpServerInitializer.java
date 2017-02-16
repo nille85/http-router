@@ -46,6 +46,8 @@ public class HttpServerInitializer extends ChannelInitializer<SocketChannel> {
         p.addLast("encoder", new HttpResponseEncoder());
         // Remove the following line if you don't want automatic content compression. 
         p.addLast("deflater", new HttpContentCompressor());
+        p.addLast(new MyRequestDecoder());
         p.addLast("handler", new HttpServerHandler( registry, exceptionHandler));
+        
     }
 }

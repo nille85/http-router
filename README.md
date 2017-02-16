@@ -66,5 +66,17 @@ public class AddSubscriptionForPersonHandler implements RequestHandler {
 }
 ```
 
+##Java 8
+
+It is also possible to implement Request Handlers using lambda
+
+```    
+    router.addRoute(new Route(
+                Method.GET,
+                "/subscriptions",
+                (request) -> Response.builder().withBody("fetched subscriptions").build()
+        ));
+```
+
 
 
