@@ -41,6 +41,74 @@ In order to start a router, only the start method needs to be called. Once the r
 router.start();
 ```
 
+##Request Handler
+Request handlers return a response based on an incoming request when a route was matched.
+
+###A Simple Example
+The request handler underneath returns a response with a plain text message containing the text `Hello world`. The HTTP status code that is returned is a `200 OK`
+```
+public class SimpleRequestHandler implements RequestHandler {
+
+    @Override
+    public Response handle(Request request) {
+        return Response.builder()
+                .withBody(new Body(new TextMedia("Hello world")))
+                .withStatusCode(StatusCode.OK)
+                .withHeader("Content-Type", "text/plain")
+                .build();
+    }
+
+}
+```
+###Handling Query Parameters And Custom Media
+
+The example underneath reads the query parameter `count` from the request. Based on that parameter it creates a number of articles. The articles are transformed into JSON and returned to the client.
+```
+public class GetArticlesRequestHandler implements RequestHandler {
+
+    @Override
+    public Response handle(Request request) {
+
+        Count count = new Count(request);
+        List<Article> articles = new ArrayList<>();
+        for (int i = 1; i <= count.getValue(); i++) {
+            articles.add(new Article(
+                    "Title " + i,
+                    "Text " + i)
+            );
+        }
+        JsonMedia media = new JsonMedia(articles);
+
+        return Response.builder()
+                .withBody(new Body(media))
+                .withStatusCode(200)
+                .withHeader("Content-Type", "application/json")
+                .build();
+
+    }
+    
+    private static class Count{
+        
+        private final Request request;
+        
+        Count(final Request request){
+            this.request = request;
+        }
+        
+        int getValue(){
+            List<String> values = request.getQueryParameters().get("count");
+            if(!values.isEmpty()){
+                int value = Integer.parseInt(values.get(0));
+                return value;
+            }
+            throw new IllegalArgumentException("Invalid count parameter");
+        }
+    }
+
+}
+
+
+```
 
 
 ##Path Parameters
