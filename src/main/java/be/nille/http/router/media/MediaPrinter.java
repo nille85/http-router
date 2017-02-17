@@ -3,16 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router;
+package be.nille.http.router.media;
 
 /**
  *
  * @author nholvoet
  */
-public class MethodNotFoundException extends HttpRouterException {
+public interface MediaPrinter {
     
     
-    public MethodNotFoundException(final String message){
-        super(message);
-    }
+    public String print();
+    
 }

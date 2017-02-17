@@ -6,7 +6,7 @@
 package be.nille.http.router;
 
 import be.nille.http.router.request.Request;
-import be.nille.http.router.media.Body;
+import be.nille.http.router.response.Body;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.route.Method;
@@ -37,7 +37,7 @@ public class RouteRegistryTest {
    }
     
     @Test
-    public void shouldFindRegisteredRoute(){
+    public void shouldFindRegisteredRoute() throws StatusCodeException{
           
        Route route = registry.find(new Method(Method.GET),"/subscriptions/20");
        assertTrue(route.matchesMethod(new Method(Method.GET)));
@@ -45,19 +45,19 @@ public class RouteRegistryTest {
             
     }
     
-    @Test(expected = MethodNotFoundException.class)
-    public void shouldThrowMethodNotFoundException(){
+    @Test(expected = StatusCodeException.class)
+    public void shouldThrowMethodNotFoundException() throws StatusCodeException{
        registry.find(new Method(Method.PUT),"/subscriptions/20");
     }
     
-    @Test(expected = PathNotFoundException.class)
-    public void shouldThrowPathNotFoundException(){
+    @Test(expected = StatusCodeException.class)
+    public void shouldThrowPathNotFoundException() throws StatusCodeException{
        registry.find(new Method(Method.PUT),"/persons/20");
     }
     
     
     @Test
-    public void shouldNotFindRoute(){
+    public void shouldNotFindRoute() throws StatusCodeException{
           
        Route route = registry.find(new Method(Method.GET),"/subscriptions/20");
        assertTrue(route.matchesMethod(new Method(Method.GET)));
@@ -78,8 +78,8 @@ public class RouteRegistryTest {
     }
     
     
-    @Test(expected = MethodNotFoundException.class)
-    public void testx(){
+    @Test(expected = StatusCodeException.class)
+    public void testx() throws StatusCodeException{
         
         RouteRegistry reg = new RouteRegistry();
         reg.add(

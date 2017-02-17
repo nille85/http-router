@@ -5,6 +5,7 @@
  */
 package be.nille.http.router;
 
+import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Route;
 import java.util.ArrayList;
@@ -34,14 +35,14 @@ public class RouteRegistry {
         return this;
     }
     
-    public Route find(Method method, String requestPath) {
+    public Route find(Method method, String requestPath) throws StatusCodeException {
         List<Route> filteredByPath = findRoutesByPath(this.routes,requestPath);
         List<Route> filteredByMethod = findRoutesByMethod(filteredByPath, method);
         return filteredByMethod.get(0);
     }
     
     
-    private List<Route> findRoutesByPath(List<Route> routes, String requestPath){
+    private List<Route> findRoutesByPath(List<Route> routes, String requestPath) throws StatusCodeException{
         List<Route> filteredRoutes
                 = routes
                 .stream()
@@ -54,13 +55,11 @@ public class RouteRegistry {
         if (!filteredRoutes.isEmpty()) {
             return filteredRoutes;
         }
-        throw new PathNotFoundException(
-                String.format("The resource at the path %s was not found", requestPath)
-        );
+        throw new StatusCodeException(new StatusCode(StatusCode.NOT_FOUND));
         
     }
     
-    private List<Route> findRoutesByMethod(List<Route> routes, Method method){
+    private List<Route> findRoutesByMethod(List<Route> routes, Method method) throws StatusCodeException{
         List<Route> filteredRoutes
                 = routes
                 .stream()
@@ -71,12 +70,8 @@ public class RouteRegistry {
         if (!filteredRoutes.isEmpty()) {
             return filteredRoutes;
         }
-        throw new MethodNotFoundException(
-                String.format("The method at the current path %s is not allowed", 
-                                    method.getName()
-                                  
-                )
-        );
+        throw new StatusCodeException(new StatusCode(StatusCode.METHOD_NOT_ALLOWED));
+        
         
     }
 

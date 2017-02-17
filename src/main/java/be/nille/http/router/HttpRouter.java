@@ -57,7 +57,7 @@ public class HttpRouter {
         try{
             httpServer.run(registry);
         }catch(Exception ex){
-            throw new HttpRouterException("The Http router could not be started",ex);
+            throw new RuntimeException("The Http router could not be started",ex);
         }
     }
     
@@ -67,7 +67,7 @@ public class HttpRouter {
     
     private void validate(){
         if(registry.getRoutes().isEmpty()){
-            throw new HttpRouterException("There are no routes specified for this server");
+            throw new RuntimeException("There are no routes specified for this server");
         }
     }
     

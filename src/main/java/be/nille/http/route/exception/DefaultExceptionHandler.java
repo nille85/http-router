@@ -6,13 +6,13 @@
 package be.nille.http.route.exception;
 
 import be.nille.http.router.HttpRouterException;
-import be.nille.http.router.PathNotFoundException;
-import be.nille.http.router.MethodNotFoundException;
-import be.nille.http.router.media.Body;
+import be.nille.http.router.HttpRouterException.Context;
+import be.nille.http.router.response.Body;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.response.ResponseBuilder;
 import be.nille.http.router.media.TextMedia;
+import be.nille.http.router.request.Request;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -22,25 +22,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DefaultExceptionHandler implements ExceptionHandler {
 
+    private static final String CONTENT_TYPE = "text/plain;charset=utf-8";
+   
 
     @Override
     public Response handleException(HttpRouterException exception) {
-        log.error(exception.getMessage());
+        Context context = exception.getContext();
+        Request request = context.getRequest();
+        
+        
+        log.error(
+                String.format("An error occurred while executing %s request to %s", 
+                        request.getMethod().getName(),
+                        request.getUri().toString()
+                ),
+                exception.getCause()
+        );
+        StatusCode code = context.getStatusCode();
         ResponseBuilder builder = Response.builder()
-                .withHeader("Content-Type", "text/plain;charset=utf-8");
-
-        if (exception.getCause() instanceof MethodNotFoundException) {
-            builder.withBody(new Body(new TextMedia("not allowed")))
-                    .withStatusCode(StatusCode.METHOD_NOT_ALLOWED);
-
-        } else if (exception.getCause() instanceof PathNotFoundException) {
-            builder.withBody(new Body(new TextMedia("not found")))
-                    .withStatusCode(StatusCode.NOT_FOUND);
-        } else {
-            builder.withBody(new Body(new TextMedia("internal server error")))
-                    .withStatusCode(StatusCode.INTERNAL_SERVER_ERROR);
-        }
-
+                .withBody(new Body(new TextMedia("")))
+                .withStatusCode(code.getValue())
+                .withHeader("Content-Type", CONTENT_TYPE);
         return builder.build();
     }
 

@@ -5,7 +5,6 @@
  */
 package be.nille.http.router.response;
 
-import be.nille.http.router.media.Body;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;

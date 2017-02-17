@@ -56,7 +56,7 @@ public class HttpRouterTest {
     }
     
     
-    @Test(expected = HttpRouterException.class)
+    @Test(expected = RuntimeException.class)
     public void routerShouldThrowExceptionWhenStartedWithoutRoutes() throws Exception{
        router.start();
     }
@@ -74,7 +74,7 @@ public class HttpRouterTest {
       
     }
     
-    @Test(expected = HttpRouterException.class)
+    @Test(expected = RuntimeException.class)
     public void routerShouldThrowExceptionWhenServerThrowsException() throws Exception{
         Mockito.doThrow(new RuntimeException("Http server exception")).when(httpServer).run(any(RouteRegistry.class));
         router.addRoute(new Route(

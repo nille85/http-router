@@ -7,10 +7,13 @@ package be.nille.http.router.netty;
 
 import be.nille.http.route.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
+import be.nille.http.router.HttpRouterException.Context;
 
 import be.nille.http.router.RouteRegistry;
+import be.nille.http.router.StatusCodeException;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
+import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
 import be.nille.http.router.route.Route;
 import io.netty.buffer.Unpooled;
@@ -60,7 +63,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        
+        //TODO when decoding fails -> return bad request
         HttpObject httpObject = (HttpObject) msg;
         log.debug("decoding successFull? :" + httpObject.decoderResult().isSuccess());
         
@@ -79,20 +82,27 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
                
                 Response response;
                 Request nettyRequest = new NettyRequest(httpRequest, httpContent);
-                
                 try {
-                  
                     Route route = registry.find(nettyRequest.getMethod(),nettyRequest.getUri().getPath());
                     log.info(String.format("Route found with method %s and path %s", route.getMethod(), route.getPath()));
                     Request matchedRequest = new MatchedRequest(route, nettyRequest);
                     response = route.execute(matchedRequest);
-                    
-                } catch (Exception ex) {
-                    HttpRouterException routerException = new HttpRouterException(
-                            String.format("An error occurred while executing request %s", nettyRequest)
-                            , ex
+                   
+                } catch(StatusCodeException sce){
+                    response = exceptionHandler.handleException(
+                            new HttpRouterException(
+                                    new Context(sce.getStatusCode(), nettyRequest),
+                                    sce
+                            )
                     );
-                    response = exceptionHandler.handleException(routerException);
+                } catch (Exception ex){
+                    HttpRouterException hre = new HttpRouterException(
+                            new Context(new StatusCode(
+                                    StatusCode.INTERNAL_SERVER_ERROR),
+                                    nettyRequest
+                            ),
+                            ex);
+                    response = exceptionHandler.handleException(hre);
                 }
 
                 if (!writeResponse(trailer, ctx, response)) {

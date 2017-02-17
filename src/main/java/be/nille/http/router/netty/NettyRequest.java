@@ -5,9 +5,6 @@
  */
 package be.nille.http.router.netty;
 
-
-import be.nille.http.router.HttpRouterException;
-import be.nille.http.router.media.Body;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.route.Method;
 
@@ -47,7 +44,7 @@ public class NettyRequest implements Request {
         try {
             return new URI(httpRequest.uri());
         } catch (URISyntaxException ex) {
-            throw new HttpRouterException(
+            throw new RuntimeException(
                     String.format("The value %s is not a valid URI ", httpRequest.uri()),
                     ex
             );
