@@ -2,11 +2,16 @@
 A non blocking object-oriented HTTP server based on Netty
 
 
-##Initializing a Router
+##Routers
+
+###Initializing a Router
 ```
-HttpRouter router = new HttpRouter()
-                .listenTo(8080);
-        
+HttpRouter router = new HttpRouter(80)
+
+```
+###Adding Routes
+Before starting the router, routes need to be added. A route consists of a HTTP method, the path of the resource and a request handler. The request handler defines what needs to be done with the request when it arrives at the defined path. A request handler returns a response.
+```        
 router.addRoute(
               new Route(
                       new Method(Method.GET),
@@ -24,12 +29,19 @@ router.addRoute(
               )
 );
 
+```
 
 
+
+###Starting a router
+
+In order to start a router, only the start method needs to be called. Once the router is started, no more routes can be added.
+
+```
 router.start();
 ```
 
-Once the router is started, no more routes can be added
+
 
 ##Path Parameters
 
