@@ -11,7 +11,9 @@ import be.nille.http.router.HttpRouterException.Context;
 
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.StatusCodeException;
+import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.request.Request;
+import be.nille.http.router.response.Body;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
@@ -43,15 +45,15 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
+public class HttpServerHandler extends ChannelInboundHandlerAdapter {
 
     private final RouteRegistry registry;
     private final ExceptionHandler exceptionHandler;
-    
+
     private HttpRequest httpRequest;
     private HttpContent httpContent;
 
-    public HttpServerHandler(final RouteRegistry registry,final ExceptionHandler exceptionHandler) {
+    public HttpServerHandler(final RouteRegistry registry, final ExceptionHandler exceptionHandler) {
         this.registry = registry;
         this.exceptionHandler = exceptionHandler;
     }
@@ -63,13 +65,22 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        //TODO when decoding fails -> return bad request
-        HttpObject httpObject = (HttpObject) msg;
-        log.debug("decoding successFull? :" + httpObject.decoderResult().isSuccess());
-        
+        Response response;
+
         if (msg instanceof HttpRequest) {
 
             this.httpRequest = (HttpRequest) msg;
+            boolean decodingSuccess = httpRequest.decoderResult().isSuccess();
+            if (!decodingSuccess) {
+                response = Response.builder()
+                        .withBody(new Body(new TextMedia("")))
+                        .withHeader("content-type", "text-plain")
+                        .withStatusCode(StatusCode.BAD_REQUEST)
+                        .build();
+                if (!writeResponse(ctx, response)) {
+                    ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
+                }
+            }
         }
 
         if (msg instanceof HttpContent) {
@@ -79,33 +90,32 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
             if (msg instanceof LastHttpContent) {
 
                 LastHttpContent trailer = (LastHttpContent) msg;
-               
-                Response response;
+
                 Request nettyRequest = new NettyRequest(httpRequest, httpContent);
                 try {
-                    Route route = registry.find(nettyRequest.getMethod(),nettyRequest.getUri().getPath());
+                    Route route = registry.find(nettyRequest.getMethod(), nettyRequest.getUri().getPath());
                     log.info(String.format("Route found with method %s and path %s", route.getMethod(), route.getPath()));
                     Request matchedRequest = new MatchedRequest(route, nettyRequest);
                     response = route.execute(matchedRequest);
-                   
-                } catch(StatusCodeException sce){
+
+                } catch (StatusCodeException sce) {
                     response = exceptionHandler.handleException(
                             new HttpRouterException(
                                     new Context(sce.getStatusCode(), nettyRequest),
                                     sce
                             )
                     );
-                } catch (Exception ex){
+                } catch (Exception ex) {
                     HttpRouterException hre = new HttpRouterException(
                             new Context(new StatusCode(
-                                    StatusCode.INTERNAL_SERVER_ERROR),
+                                            StatusCode.INTERNAL_SERVER_ERROR),
                                     nettyRequest
                             ),
                             ex);
                     response = exceptionHandler.handleException(hre);
                 }
 
-                if (!writeResponse(trailer, ctx, response)) {
+                if (!writeResponse(ctx, response)) {
                     // If keep-alive is off, close the connection once the content is fully written.
                     ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
                 }
@@ -114,13 +124,12 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
 
     }
 
-
-    private boolean writeResponse(HttpObject currentObj, ChannelHandlerContext ctx, Response resp) {
+    private boolean writeResponse(ChannelHandlerContext ctx, Response resp) {
         // Decide whether to close the connection or not.
         boolean keepAlive = HttpHeaders.isKeepAlive(httpRequest);
-         // Build the response object.
+        // Build the response object.
         FullHttpResponse response = new DefaultFullHttpResponse(
-                HTTP_1_1, currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
+                HTTP_1_1, HttpResponseStatus.valueOf(resp.getStatusCode().getValue()),
                 Unpooled.copiedBuffer(resp.getBody().print(), CharsetUtil.UTF_8));
 
         if (keepAlive) {
@@ -130,7 +139,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
             // - http://www.w3.org/Protocols/HTTP/1.1/draft-ietf-http-v11-spec-01.html#Connection
             response.headers().set(CONNECTION, HttpHeaders.Values.KEEP_ALIVE);
         }
-        
+
         response.setStatus(new HttpResponseStatus(resp.getStatusCode().getValue(), ""));
 
         for (Map.Entry<String, String> header : resp.getHeaders().entrySet()) {
@@ -149,5 +158,4 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
         ctx.close();
     }
 
-   
 }

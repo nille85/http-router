@@ -29,7 +29,7 @@ public class DefaultExceptionHandler implements ExceptionHandler {
     public Response handleException(HttpRouterException exception) {
         Context context = exception.getContext();
         Request request = context.getRequest();
-        
+       
         
         log.error(
                 String.format("An error occurred while executing %s request to %s", 
