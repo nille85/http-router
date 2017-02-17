@@ -50,13 +50,13 @@ public class Route {
     }
 
     public boolean matchesResource(String requestPath) {
-        log.debug("checking if inputted requestPath " + requestPath + " matches " + path.getValue());
+       
         //when query string is present
         requestPath = requestPath.split("\\?")[0];
         String pathValue = path.getValue();
         //when path variable is not at the end
         String pattern = pathValue.replaceAll(":.*/", "(.*)/");
-        log.debug("checking if inputted requestPath " + requestPath + " matches " + pattern);
+       
         //when path variable is at the end
         pattern = pattern.replaceAll(":.*[^/]", "(.*)");
         Pattern p = Pattern.compile(pattern);
@@ -64,7 +64,6 @@ public class Route {
         Matcher matcher = p.matcher(requestPath);
         boolean matches = matcher.matches();
 
-        log.debug("matches? " + matches);
         return matches;
 
     }

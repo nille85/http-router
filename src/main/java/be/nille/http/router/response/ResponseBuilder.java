@@ -5,8 +5,9 @@
  */
 package be.nille.http.router.response;
 
-import be.nille.http.router.response.Response.Body;
-import be.nille.http.router.response.Response.StatusCode;
+
+import be.nille.http.router.media.Body;
+import be.nille.http.router.media.TextMedia;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,13 +18,13 @@ import java.util.Map;
 public class ResponseBuilder {
     
     private final Map<String,String> headers;
-    private String body;
+    private Body body;
     private int statusCode;
    
     
     public ResponseBuilder(){
         headers = new HashMap<>();
-        body = "";
+        body = new Body(new TextMedia(""));
         statusCode = StatusCode.OK;
     }
 
@@ -32,7 +33,7 @@ public class ResponseBuilder {
         return this;
     }
 
-    public ResponseBuilder withBody(final String body){
+    public ResponseBuilder withBody(final Body body){
         this.body = body;
         return this;
     }
@@ -44,7 +45,7 @@ public class ResponseBuilder {
     
     public Response build(){
         return new DefaultResponse(
-                new Body(body), new StatusCode(statusCode), headers);
+               body, new StatusCode(statusCode), headers);
     }
 
    

@@ -6,7 +6,7 @@
 package be.nille.http.router.netty;
 
 import be.nille.http.route.exception.ExceptionHandler;
-import be.nille.http.router.HttpClientException;
+import be.nille.http.router.HttpRouterException;
 
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.request.Request;
@@ -17,7 +17,6 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.channel.SimpleChannelInboundHandler;
 
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
 import io.netty.handler.codec.http.FullHttpResponse;
@@ -61,6 +60,10 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        
+        HttpObject httpObject = (HttpObject) msg;
+        log.debug("decoding successFull? :" + httpObject.decoderResult().isSuccess());
+        
         if (msg instanceof HttpRequest) {
 
             this.httpRequest = (HttpRequest) msg;
@@ -85,8 +88,11 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
                     response = route.execute(matchedRequest);
                     
                 } catch (Exception ex) {
-                    HttpClientException clientException = new HttpClientException(nettyRequest, ex);
-                    response = exceptionHandler.handleException(clientException);
+                    HttpRouterException routerException = new HttpRouterException(
+                            String.format("An error occurred while executing request %s", nettyRequest)
+                            , ex
+                    );
+                    response = exceptionHandler.handleException(routerException);
                 }
 
                 if (!writeResponse(trailer, ctx, response)) {
@@ -105,7 +111,7 @@ public class HttpServerHandler extends ChannelInboundHandlerAdapter  {
          // Build the response object.
         FullHttpResponse response = new DefaultFullHttpResponse(
                 HTTP_1_1, currentObj.decoderResult().isSuccess() ? OK : BAD_REQUEST,
-                Unpooled.copiedBuffer(resp.getBody().getValue(), CharsetUtil.UTF_8));
+                Unpooled.copiedBuffer(resp.getBody().print(), CharsetUtil.UTF_8));
 
         if (keepAlive) {
             // Add 'Content-Length' header only for a keep-alive connection.

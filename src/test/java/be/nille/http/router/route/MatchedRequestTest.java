@@ -6,14 +6,10 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
+import be.nille.http.router.media.Body;
 import be.nille.http.router.response.DefaultResponse;
-import be.nille.http.router.response.Response;
-import be.nille.http.router.route.MatchedRequest;
-import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Path;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.media.TextMedia;
 import java.net.URISyntaxException;
-import java.util.List;
 import java.util.Map;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
@@ -33,7 +29,7 @@ public class MatchedRequestTest {
     @Test
     public void requestShouldHaveNoPathParams() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request = new MatchedRequest(route,Request.builder()
                 .withMethod(Method.GET)
@@ -48,7 +44,7 @@ public class MatchedRequestTest {
     @Test
     public void requestShouldHaveTwoPathParams() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search/:language"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request =new MatchedRequest(route, Request.builder()
                 .withMethod(Method.GET)
@@ -68,7 +64,7 @@ public class MatchedRequestTest {
     @Test
     public void requestShouldHaveOnePathParam() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request = new MatchedRequest(route,Request.builder()
                 .withMethod(Method.GET)

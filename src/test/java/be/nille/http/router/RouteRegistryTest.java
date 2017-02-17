@@ -6,7 +6,9 @@
 package be.nille.http.router;
 
 import be.nille.http.router.request.Request;
+import be.nille.http.router.media.Body;
 import be.nille.http.router.response.Response;
+import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Path;
 import be.nille.http.router.route.RequestHandler;
@@ -69,7 +71,7 @@ public class RouteRegistryTest {
         @Override
         public Response handle(Request request) {
             return Response.builder()
-                    .withBody("this is a simple response")
+                    .withBody(new Body(new TextMedia("this is a simple response")))
                     .build();
         }
         

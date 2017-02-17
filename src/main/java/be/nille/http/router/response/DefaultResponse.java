@@ -5,28 +5,31 @@
  */
 package be.nille.http.router.response;
 
+import be.nille.http.router.media.Body;
 import java.util.HashMap;
 import java.util.Map;
 import lombok.Getter;
+import lombok.ToString;
 
 /**
  *
  * @author nholvoet
  */
 @Getter
+@ToString
 public class DefaultResponse implements Response {
     
-    private final Response.Body body;
-    private final Response.StatusCode statusCode;
+    private final Body body;
+    private final StatusCode statusCode;
     private final Map<String,String> headers;
     
     
-    public DefaultResponse(Response.Body body){
-        this(body, new Response.StatusCode(Response.StatusCode.OK), new HashMap<>());
+    public DefaultResponse(Body body){
+        this(body, new StatusCode(StatusCode.OK), new HashMap<>());
     }
     
     
-    public DefaultResponse(Response.Body body, Response.StatusCode statusCode, Map<String, String> headers){
+    public DefaultResponse(Body body, StatusCode statusCode, Map<String, String> headers){
         this.body = body;
         this.statusCode = statusCode;
         this.headers = headers;
@@ -35,6 +38,5 @@ public class DefaultResponse implements Response {
     public static ResponseBuilder builder(){
         return new ResponseBuilder();
     }
-    
     
 }

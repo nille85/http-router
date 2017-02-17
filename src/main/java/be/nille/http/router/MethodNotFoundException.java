@@ -9,7 +9,7 @@ package be.nille.http.router;
  *
  * @author nholvoet
  */
-public class MethodNotFoundException extends RuntimeException {
+public class MethodNotFoundException extends HttpRouterException {
     
     
     public MethodNotFoundException(final String message){

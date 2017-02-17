@@ -7,6 +7,7 @@ package be.nille.http.router.netty;
 
 
 import be.nille.http.router.HttpRouterException;
+import be.nille.http.router.media.Body;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.route.Method;
 

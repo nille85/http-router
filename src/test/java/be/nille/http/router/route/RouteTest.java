@@ -5,22 +5,13 @@
  */
 package be.nille.http.router.route;
 
-import be.nille.http.router.route.Path;
-import be.nille.http.router.route.Route;
-import be.nille.http.router.route.Method;
-import be.nille.http.router.request.DefaultRequest;
-import be.nille.http.router.request.Request;
+import be.nille.http.router.media.Body;
 import be.nille.http.router.response.DefaultResponse;
-import be.nille.http.router.response.Response;
-import be.nille.http.router.response.ResponseBuilder;
-import java.net.URI;
+import be.nille.http.router.media.TextMedia;
 import java.net.URISyntaxException;
-import java.util.Map;
-import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -33,7 +24,7 @@ public class RouteTest {
     @Test
     public void pathShouldMatchWhenSameAsInURL() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
         assertTrue(route.matchesResource("/subscriber/1/search"));
@@ -43,7 +34,7 @@ public class RouteTest {
     public void pathShouldMatchWhenSameAsInURLWithParameters() throws URISyntaxException {
 
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
 
 
@@ -53,7 +44,7 @@ public class RouteTest {
     @Test
     public void pathShouldMatchWhenSameAsInURLWithPathParam() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+              (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
 
@@ -64,7 +55,7 @@ public class RouteTest {
     @Test
     public void pathShouldMatchWhenSameAsInURLWithPathParamAtEnd() throws URISyntaxException {
         Route route = new Route(new Method(Method.GET), new Path("/subscriber/search/:subscriberId"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
      
 
@@ -76,7 +67,7 @@ public class RouteTest {
     public void pathShouldNotMatchWhenDifferentAsInUrl() throws URISyntaxException {
 
         Route route = new Route(new Method(Method.GET), new Path("/subscription/2/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
 
         assertFalse(route.matchesResource("/subscriber/1/search"));
@@ -86,7 +77,7 @@ public class RouteTest {
     public void pathShouldNotMatchWhenDifferentStart() throws URISyntaxException {
 
         Route route = new Route(new Method(Method.GET), new Path("subscription/1/search"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
 
@@ -97,7 +88,7 @@ public class RouteTest {
     public void pathShouldNotMatchWhenDifferentEnd() throws URISyntaxException {
 
         Route route = new Route(new Method(Method.GET), new Path("subscription/1/searchp"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
       
 
@@ -109,7 +100,7 @@ public class RouteTest {
     public void test() throws URISyntaxException {
 
         Route route = new Route(new Method(Method.POST), new Path("/:personId/persons"),
-                (request) -> new DefaultResponse(new Response.Body("content")));
+                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
       
 

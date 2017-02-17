@@ -6,7 +6,6 @@
 package be.nille.http.router.request;
 
 import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Route;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;

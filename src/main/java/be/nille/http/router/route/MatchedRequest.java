@@ -102,6 +102,12 @@ public class MatchedRequest implements Request {
     public Body getBody() {
         return request.getBody();
     }
+    
+    
+    @Override
+    public String toString(){
+        return String.format("Request[ method : %s, uri: %s", request.getMethod(), request.getUri().toString());
+    }
 
     
     
