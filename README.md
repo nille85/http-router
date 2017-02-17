@@ -59,7 +59,21 @@ public class SimpleRequestHandler implements RequestHandler {
     }
 
 }
+
 ```
+
+##Java 8
+
+It is also possible to implement Request Handlers using lambda expressions
+
+```    
+    router.addRoute(new Route(
+                Method.GET,
+                "/subscriptions",
+                (request) -> Response.builder().withBody("fetched subscriptions").build()
+        ));
+```
+
 ###Handling Query Parameters And Custom Media
 
 The example underneath reads the query parameter `count` from the request. Based on that parameter it creates a number of articles. The articles are transformed into JSON and returned to the client.
@@ -146,17 +160,7 @@ public class AddSubscriptionForPersonHandler implements RequestHandler {
 }
 ```
 
-##Java 8
 
-It is also possible to implement Request Handlers using lambda expressions
-
-```    
-    router.addRoute(new Route(
-                Method.GET,
-                "/subscriptions",
-                (request) -> Response.builder().withBody("fetched subscriptions").build()
-        ));
-```
 
 ##Exception Handling
 
