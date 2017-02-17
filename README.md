@@ -68,7 +68,7 @@ public class AddSubscriptionForPersonHandler implements RequestHandler {
 
 ##Java 8
 
-It is also possible to implement Request Handlers using lambda
+It is also possible to implement Request Handlers using lambda expressions
 
 ```    
     router.addRoute(new Route(
@@ -78,5 +78,38 @@ It is also possible to implement Request Handlers using lambda
         ));
 ```
 
+##Exception Handling
 
+A custom exception handler can be specified when initializing the Http Router
+
+```
+HttpRouter router = new HttpRouter(8080, new CustomExceptionHandler());
+
+```
+
+Only one method needs to implemented. The HttpRouterException is passed as a parameter to the function. This exception contains context information about the request and the status code. This allows you to tailor the error responses to your needs. 
+
+```
+public class CustomExceptionHandler implements ExceptionHandler {
+
+    @Override
+    public Response handleException(HttpRouterException hre) {
+        HttpRouterException.Context context = hre.getContext();
+        Request request = context.getRequest();
+        
+        Media media = new JsonMedia(
+                new Error("CODE_001",
+                        "Something bad happened at " + request.getUri().getPath())
+        );
+     
+        StatusCode code = context.getStatusCode();
+        ResponseBuilder builder = Response.builder()
+                .withBody(new Body(media))
+                .withStatusCode(code.getValue())
+                .withHeader("Content-Type", "application/json");
+        return builder.build();
+    }
+    
+}
+```
 
