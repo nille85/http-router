@@ -27,9 +27,9 @@ import java.util.Map;
 public class NettyRequest implements Request {
     
     private final HttpRequest httpRequest;
-    private final HttpContent httpContent;
+    private final String httpContent;
     
-    public NettyRequest(final HttpRequest httpRequest, final HttpContent httpContent){
+    public NettyRequest(final HttpRequest httpRequest, final String httpContent){
         this.httpRequest = httpRequest;
         this.httpContent = httpContent;
     }
@@ -75,12 +75,7 @@ public class NettyRequest implements Request {
 
     @Override
     public Body getBody() {
-        ByteBuf buff = httpContent.content();
-        String body = "";
-        if (buff.isReadable()) {
-            body = buff.toString(CharsetUtil.UTF_8);
-        }
-        return new Body(body);
+        return new Body(httpContent);
     }
 
     @Override

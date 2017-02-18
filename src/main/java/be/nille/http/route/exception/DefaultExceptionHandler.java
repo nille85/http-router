@@ -35,8 +35,7 @@ public class DefaultExceptionHandler implements ExceptionHandler {
                 String.format("An error occurred while executing %s request to %s", 
                         request.getMethod().getName(),
                         request.getUri().toString()
-                ),
-                exception.getCause()
+                )
         );
         StatusCode code = context.getStatusCode();
         ResponseBuilder builder = Response.builder()

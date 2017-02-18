@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.netty;
 
+import be.nille.http.router.response.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import lombok.extern.slf4j.Slf4j;
@@ -14,22 +15,24 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class MyRequestDecoder extends ChannelInboundHandlerAdapter  {
+public class ResponseInterceptor extends ChannelInboundHandlerAdapter  {
 
-    
-    public MyRequestDecoder() {
-       
-    }
- 
+
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        log.debug("In http request decoder");
-        ctx.fireChannelRead(msg);
+     
+         if(msg instanceof TCPConnection){
+             ctx.fireChannelRead(msg);
+         }
+        
+         if (msg instanceof Response) {
+             Response response = (Response) msg;
+             //do something with response
+             ctx.fireChannelRead(response);
+            
+         }   
     }
-
-
-  
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
