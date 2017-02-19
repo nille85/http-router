@@ -18,56 +18,67 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public class HttpRouter {
-    
+
     private final RouteRegistry registry;
-   
+
     private final HttpServer httpServer;
     
-    
-    public HttpRouter(final int port){
-        this(new NettyHttpServer(new Port(port).getValue(),new DefaultExceptionHandler()));
+    private volatile Thread nettyThread;
+
+    public HttpRouter(final int port) {
+        this(new NettyHttpServer(new Port(port).getValue(), new DefaultExceptionHandler()));
     }
-    
-     public HttpRouter(final int port, final ExceptionHandler exceptionHandler){
-        this(new NettyHttpServer(new Port(port).getValue(),  exceptionHandler));
+
+    public HttpRouter(final int port, final ExceptionHandler exceptionHandler) {
+        this(new NettyHttpServer(new Port(port).getValue(), exceptionHandler));
     }
-    
-    public HttpRouter(final Port port){
-        this(new NettyHttpServer(port.getValue(),  new DefaultExceptionHandler()));
+
+    public HttpRouter(final Port port) {
+        this(new NettyHttpServer(port.getValue(), new DefaultExceptionHandler()));
     }
-    
-    public HttpRouter(final Port port, final ExceptionHandler exceptionHandler){
-        this(new NettyHttpServer(port.getValue(),  exceptionHandler));
+
+    public HttpRouter(final Port port, final ExceptionHandler exceptionHandler) {
+        this(new NettyHttpServer(port.getValue(), exceptionHandler));
     }
-    
-    public HttpRouter(final HttpServer httpServer){
+
+    public HttpRouter(final HttpServer httpServer) {
         this.registry = new RouteRegistry();
         this.httpServer = httpServer;
     }
-          
-    public HttpRouter addRoute(final Route route){
+
+    public HttpRouter addRoute(final Route route) {
         this.registry.add(route);
         log.info(String.format("Route added with path %s and method %s", route.getPath(), route.getMethod()));
         return this;
     }
-    
-    public void start(){
+
+    public void start() {
         validate();
-        try{
-            httpServer.run(registry);
-        }catch(Exception ex){
-            throw new RuntimeException("The Http router could not be started",ex);
-        }
+        nettyThread = new Thread(() -> {
+            try {
+                httpServer.run(registry);
+            } catch (Exception ex) {
+                throw new RuntimeException("The Http router could not be started", ex);
+            }
+        }, "Netty thread");
+        nettyThread.start();
+        
     }
     
-    public List<Route> getRoutes(){
+    public void stop(){
+        httpServer.stop();
+        log.info("Stopping the Netty thread");
+        nettyThread = null;
+    }
+
+    public List<Route> getRoutes() {
         return registry.getRoutes();
     }
-    
-    private void validate(){
-        if(registry.getRoutes().isEmpty()){
+
+    private void validate() {
+        if (registry.getRoutes().isEmpty()) {
             throw new RuntimeException("There are no routes specified for this server");
         }
     }
-    
+
 }

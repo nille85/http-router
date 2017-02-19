@@ -12,4 +12,6 @@ package be.nille.http.router;
 public interface HttpServer {
     
     void run(RouteRegistry routeRegistry) throws Exception;
+    
+    void stop();
 }

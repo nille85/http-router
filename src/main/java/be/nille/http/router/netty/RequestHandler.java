@@ -37,7 +37,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RequestHandler extends ChannelInboundHandlerAdapter {
 
-    private TCPConnection tcpConnection;
 
     private final RouteRegistry registry;
     private final ExceptionHandler exceptionHandler;

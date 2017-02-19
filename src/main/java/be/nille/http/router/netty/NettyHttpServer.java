@@ -21,13 +21,13 @@ public class NettyHttpServer implements HttpServer {
 
     private final int port;
     private final ExceptionHandler exceptionHandler;
-    
+    private EventLoopGroup bossGroup;
+    private EventLoopGroup workerGroup;
 
     public NettyHttpServer(final int port, final ExceptionHandler exceptionHandler) {
         this.port = port;
         this.exceptionHandler = exceptionHandler;
-        
-        
+
     }
 
     @Override
@@ -44,27 +44,29 @@ public class NettyHttpServer implements HttpServer {
         // Configure the server. 
         ServerBootstrap b = new ServerBootstrap();
         //boss group accepts the new connections
-        EventLoopGroup bossGroup = new NioEventLoopGroup(1);
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
-        try {
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .childHandler(new HttpServerInitializer(sslCtx, registry, exceptionHandler))
-                    .localAddress(new InetSocketAddress(port));
+        bossGroup = new NioEventLoopGroup(1);
+        workerGroup = new NioEventLoopGroup();
 
-            Channel ch = b.bind().sync().channel();
+        b.group(bossGroup, workerGroup)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new HttpServerInitializer(sslCtx, registry, exceptionHandler))
+                .localAddress(new InetSocketAddress(port));
 
-            log.info("Server is available at  "
-                    + (SSL ? "https" : "http") + "://127.0.0.1:" + port + '/');
-            
-           
-            ch.closeFuture().sync();
-        } finally {
-            log.info("in finally ...");
-            bossGroup.shutdownGracefully();
-            workerGroup.shutdownGracefully();
-        }
+        Channel ch = b.bind().sync().channel();
+
+        log.info("Server is available at  "
+                + (SSL ? "https" : "http") + "://127.0.0.1:" + port + '/');
+
+        ch.closeFuture().sync();
+
     }
 
-    
+    public void stop() {
+
+        log.info("Closing down netty threads");
+        bossGroup.shutdownGracefully();
+        workerGroup.shutdownGracefully();
+
+    }
+
 }
