@@ -5,10 +5,9 @@
  */
 package be.nille.http.router;
 
-import be.nille.http.route.exception.DefaultExceptionHandler;
-import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.exception.DefaultExceptionHandler;
+import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.netty.NettyHttpServer;
-import be.nille.http.router.netty.HttpServer;
 import be.nille.http.router.route.Route;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

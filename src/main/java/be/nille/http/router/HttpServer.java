@@ -3,9 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.netty;
-
-import be.nille.http.router.RouteRegistry;
+package be.nille.http.router;
 
 /**
  *

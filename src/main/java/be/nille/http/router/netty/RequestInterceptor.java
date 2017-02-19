@@ -36,7 +36,7 @@ public class RequestInterceptor extends ChannelInboundHandlerAdapter  {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
      
-         if(msg instanceof TCPConnection){
+         if(msg instanceof Request.MetaData){
              ctx.fireChannelRead(msg);
          }
         

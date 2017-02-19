@@ -5,7 +5,7 @@
  */
 package be.nille.http.router.netty;
 
-import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.StatusCodeException;
@@ -55,7 +55,7 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         
-        if (msg instanceof TCPConnection) {
+        if (msg instanceof Request.MetaData) {
             ctx.fireChannelRead(msg);
         }
 

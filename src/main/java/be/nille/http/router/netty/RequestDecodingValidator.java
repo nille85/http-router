@@ -5,7 +5,7 @@
  */
 package be.nille.http.router.netty;
 
-import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
 import be.nille.http.router.HttpRouterException.Context;
 

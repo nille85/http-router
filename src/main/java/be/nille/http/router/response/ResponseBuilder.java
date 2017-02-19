@@ -6,6 +6,7 @@
 package be.nille.http.router.response;
 
 
+import be.nille.http.router.media.Media;
 import be.nille.http.router.media.TextMedia;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,6 +35,11 @@ public class ResponseBuilder {
 
     public ResponseBuilder withBody(final Body body){
         this.body = body;
+        return this;
+    }
+    
+    public ResponseBuilder withBody(final Media media){
+        this.body = new Body(media);
         return this;
     }
 

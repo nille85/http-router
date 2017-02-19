@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.netty;
 
+import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -22,7 +23,7 @@ public class ResponseInterceptor extends ChannelInboundHandlerAdapter  {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
      
-         if(msg instanceof TCPConnection){
+         if(msg instanceof Request.MetaData){
              ctx.fireChannelRead(msg);
          }
         

@@ -1,6 +1,7 @@
 package be.nille.http.router.netty;
 
-import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.HttpServer;
+import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.RouteRegistry;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -42,6 +43,7 @@ public class NettyHttpServer implements HttpServer {
 
         // Configure the server. 
         ServerBootstrap b = new ServerBootstrap();
+        //boss group accepts the new connections
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
@@ -54,9 +56,11 @@ public class NettyHttpServer implements HttpServer {
 
             log.info("Server is available at  "
                     + (SSL ? "https" : "http") + "://127.0.0.1:" + port + '/');
-
+            
+           
             ch.closeFuture().sync();
         } finally {
+            log.info("in finally ...");
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
         }

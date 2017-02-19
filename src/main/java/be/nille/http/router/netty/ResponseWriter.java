@@ -5,7 +5,7 @@
  */
 package be.nille.http.router.netty;
 
-import be.nille.http.route.exception.ExceptionHandler;
+import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
 import be.nille.http.router.RouteRegistry;
 import be.nille.http.router.StatusCodeException;
@@ -28,6 +28,7 @@ import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.util.CharsetUtil;
+import java.nio.charset.Charset;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResponseWriter extends ChannelInboundHandlerAdapter {
 
-    private TCPConnection tcpConnection;
+    private Request.MetaData metaData;
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -48,9 +49,8 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        if (msg instanceof TCPConnection) {
-            tcpConnection = (TCPConnection) msg;
-            log.info("the connection is keep alive? " + tcpConnection.isKeepAlive());
+        if (msg instanceof Request.MetaData) {
+            metaData = (Request.MetaData) msg;
         }
 
         if (msg instanceof Response) {
@@ -59,9 +59,10 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
             log.info("creating netty response");
             FullHttpResponse nettyResponse = new DefaultFullHttpResponse(
                     HTTP_1_1, HttpResponseStatus.valueOf(response.getStatusCode().getValue()),
-                    Unpooled.copiedBuffer(response.getBody().print(), CharsetUtil.UTF_8));
+                    Unpooled.copiedBuffer(response.getBody().print(), metaData.getCharset())
+            );
 
-            if (tcpConnection.isKeepAlive()) {
+            if (metaData.isKeepAlive()) {
                 // Add 'Content-Length' header only for a keep-alive connection.
                 nettyResponse.headers().set(CONTENT_LENGTH, nettyResponse.content().readableBytes());
                 // Add keep alive header as per:
@@ -75,7 +76,7 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
 
             ctx.write(nettyResponse);
 
-            if (!tcpConnection.isKeepAlive()) {
+            if (!metaData.isKeepAlive()) {
                 ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             } else {
                 ctx.flush();
