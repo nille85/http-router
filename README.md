@@ -35,11 +35,20 @@ router.addRoute(
 
 ###Starting a router
 
-In order to start a router, only the start method needs to be called. Once the router is started, no more routes can be added.
+In order to start a router, only the start method needs to be called. Routes can also be added after the router was allready started.
 
 ```
 router.start();
 ```
+
+###Stopping a router
+
+A router can also be programmatically stopped.
+
+```
+router.stop();
+```
+
 
 ##Request Handler
 Request handlers return a response based on an incoming request when a route was matched.
