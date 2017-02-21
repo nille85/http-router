@@ -9,6 +9,7 @@ import be.nille.http.router.exception.DefaultExceptionHandler;
 import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.netty.NettyHttpServer;
 import be.nille.http.router.route.Route;
+
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,13 +18,11 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class HttpRouter {
+public class HttpRouter implements Router {
 
     private final RouteRegistry registry;
 
     private final HttpServer httpServer;
-    
-    private volatile Thread nettyThread;
 
     public HttpRouter(final int port) {
         this(new NettyHttpServer(new Port(port).getValue(), new DefaultExceptionHandler()));
@@ -44,33 +43,28 @@ public class HttpRouter {
     public HttpRouter(final HttpServer httpServer) {
         this.registry = new RouteRegistry();
         this.httpServer = httpServer;
+
     }
 
-    public HttpRouter addRoute(final Route route) {
+    @Override
+    public void addRoute(final Route route) {
         this.registry.add(route);
         log.info(String.format("Route added with path %s and method %s", route.getPath(), route.getMethod()));
-        return this;
+       
     }
 
+    @Override
     public void start() {
         validate();
-        nettyThread = new Thread(() -> {
-            try {
-                httpServer.run(registry);
-            } catch (Exception ex) {
-                throw new RuntimeException("The Http router could not be started", ex);
-            }
-        }, "Netty thread");
-        nettyThread.start();
-        
-    }
-    
-    public void stop(){
-        httpServer.stop();
-        log.info("Stopping the Netty thread");
-        nettyThread = null;
+        try {
+            httpServer.run(registry);
+        } catch (Exception ex) {
+            throw new RuntimeException("The Http router could not be started", ex);
+        }
+
     }
 
+    @Override
     public List<Route> getRoutes() {
         return registry.getRoutes();
     }

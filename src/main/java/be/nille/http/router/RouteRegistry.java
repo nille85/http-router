@@ -19,20 +19,23 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public class RouteRegistry {
+public final class RouteRegistry {
 
     @Getter
     private final List<Route> routes;
    
-
     public RouteRegistry() {
-        routes = new ArrayList<>();
-       
+        routes = new ArrayList<>();    
+    }
+    
+    private RouteRegistry(List<Route> routes){
+        this.routes = routes;
     }
     
     public RouteRegistry add(final Route route) {
-        this.routes.add(route);
-        return this;
+        List<Route> copiedRoutes = this.routes;
+        copiedRoutes.add(route);
+        return new RouteRegistry(copiedRoutes);
     }
     
     public Route find(Method method, String requestPath) throws StatusCodeException {

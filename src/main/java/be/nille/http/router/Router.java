@@ -5,12 +5,20 @@
  */
 package be.nille.http.router;
 
+import be.nille.http.router.route.Route;
+import java.util.List;
+
 /**
  *
- * @author Niels Holvoet
+ * @author nholvoet
  */
-public interface HttpServer {
+public interface Router {
     
-    void run(RouteRegistry routeRegistry) throws Exception;
+    void start();
+    
+    void addRoute(Route route);
+    
+    List<Route> getRoutes();
+    
     
 }

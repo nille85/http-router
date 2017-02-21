@@ -80,6 +80,9 @@ signing {
     sign configurations.archives
 }
 
+
+
+
 //TODO Configuration for central maven repository
 uploadArchives {
   repositories {
@@ -126,6 +129,7 @@ uploadArchives {
     }
   }
 }
+
 
 
 
