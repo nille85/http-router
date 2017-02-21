@@ -6,33 +6,53 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestComponent;
+import be.nille.http.router.request.RequestMatcher;
 import be.nille.http.router.response.Response;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  * @author nholvoet
  */
-public class SimpleRoute implements Route{
+public class SimpleRoute implements OldRoute{
     
-    private final List<RequestComponent> components;
-    private final RequestHandler successHandler;
+    private final List<RequestMatcher> matchers;
+    private final RequestCallback successHandler;
     
-    public SimpleRoute(final List<RequestComponent> components, final RequestHandler successHandler){
-        this.components = components;
+    public SimpleRoute(final RequestCallback successHandler){
+        this(new ArrayList<>(), successHandler); 
+    }
+    
+    public SimpleRoute(final List<RequestMatcher> matchers, final RequestCallback successHandler){
+        this.matchers = matchers;
         this.successHandler = successHandler;
     }
+    
+    
+    @Override
+    public OldRoute addMatcher(final RequestMatcher matcher){
+        List<RequestMatcher> copiedMatchers = matchers;
+        copiedMatchers.add(matcher);
+        return new SimpleRoute(copiedMatchers, this.successHandler);
+    }
+    
+    
 
     @Override
     public boolean matches(Request request) {
-       return components.stream()
-               .allMatch(component -> component.matches(request));
+       return matchers.stream()
+               .allMatch(matcher -> matcher.matches(request));
     }
     
+    @Override
     public Response execute(final Request request) {
         return successHandler.handle(request);
     }
+
+   
+
+    
     
     
 }

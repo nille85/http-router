@@ -29,13 +29,13 @@ public class DefaultRoute {
     private final Method method;
     @Getter
     private final Path path;
-    private final RequestHandler successHandler;
+    private final RequestCallback successHandler;
 
-    public DefaultRoute(final String method, final String path, final RequestHandler successHandler) {
+    public DefaultRoute(final String method, final String path, final RequestCallback successHandler) {
         this(new Method(method), new Path(path), successHandler);
     }
 
-    public DefaultRoute(final Method method, final Path path, final RequestHandler successHandler) {
+    public DefaultRoute(final Method method, final Path path, final RequestCallback successHandler) {
         this.method = method;
         this.path = path;
         this.successHandler = successHandler;

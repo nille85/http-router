@@ -9,7 +9,7 @@ package be.nille.http.router.request;
  *
  * @author nholvoet
  */
-public interface RequestComponent {
+public interface RequestMatcher {
     
     
     boolean matches(Request request);

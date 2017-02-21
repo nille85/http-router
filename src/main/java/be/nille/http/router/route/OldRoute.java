@@ -6,16 +6,18 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
+import be.nille.http.router.request.RequestMatcher;
 import be.nille.http.router.response.Response;
 
 /**
  *
  * @author nholvoet
  */
-@FunctionalInterface
-public interface RequestHandler {
+public interface OldRoute extends RequestMatcher{
     
     
-    Response handle(Request request);
+    Response execute(Request request);
+    
+    OldRoute addMatcher(RequestMatcher matcher);
     
 }

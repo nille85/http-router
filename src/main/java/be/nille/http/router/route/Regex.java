@@ -7,29 +7,31 @@ package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
 import be.nille.http.router.request.RequestMatcher;
-import lombok.Getter;
-import lombok.ToString;
-import lombok.extern.slf4j.Slf4j;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
  * @author nholvoet
  */
-@Getter
-@ToString
-@Slf4j
-public class Path implements RequestMatcher {
-
+public class Regex implements RequestMatcher{
+    
     private final String value;
-
-    public Path(final String value) {
+    
+    public Regex(final Path path){
+        this(path.getValue());
+    }
+    
+    public Regex(final String value){
         this.value = value;
     }
 
     @Override
     public boolean matches(Request request) {
-        String requestPath = request.getPath().getValue();
-        return value.equals(requestPath);
+        Pattern pattern = Pattern.compile(value);
+        Matcher matcher = pattern.matcher(request.getPath().getValue());
+        boolean matches = matcher.matches();
+        return matches;
     }
-
+    
 }

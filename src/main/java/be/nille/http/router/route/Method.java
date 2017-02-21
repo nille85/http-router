@@ -6,7 +6,7 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestComponent;
+import be.nille.http.router.request.RequestMatcher;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,7 +17,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class Method implements RequestComponent{
+public class Method implements RequestMatcher{
 
     public static final String GET = "GET";
     public static final String PUT = "PUT";

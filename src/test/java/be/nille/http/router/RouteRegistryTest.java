@@ -11,7 +11,7 @@ import be.nille.http.router.response.Response;
 import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Path;
-import be.nille.http.router.route.RequestHandler;
+import be.nille.http.router.route.RequestCallback;
 import be.nille.http.router.route.DefaultRoute;
 import static junit.framework.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +66,7 @@ public class RouteRegistryTest {
     }
     
     
-    private static class TestRequestHandler implements RequestHandler{
+    private static class TestRequestHandler implements RequestCallback{
 
         @Override
         public Response handle(Request request) {
