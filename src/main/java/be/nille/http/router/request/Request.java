@@ -6,6 +6,7 @@
 package be.nille.http.router.request;
 
 import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Path;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface Request {
 
     Method getMethod();
 
-    URI getUri();
+    Path getPath();
 
     Map<String, List<String>> getQueryParameters();
     

@@ -11,7 +11,7 @@ import be.nille.http.router.response.Response;
 import be.nille.http.router.route.MatchedRequest;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Path;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;

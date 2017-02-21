@@ -13,21 +13,9 @@ import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
-import be.nille.http.router.route.Route;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelFutureListener;
+import be.nille.http.router.route.DefaultRoute;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpContent;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
-import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
-import io.netty.handler.codec.http.HttpHeaders;
-import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
-import io.netty.util.CharsetUtil;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -63,7 +51,7 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
             //do some interception of request
             Request request = (Request) msg;
             try {
-                Route route = registry.find(request.getMethod(), request.getUri().getPath());
+                DefaultRoute route = registry.find(request.getMethod(), request.getPath().getValue());
                 log.info(String.format("Route found with method %s and path %s", route.getMethod(), route.getPath()));
                 Request matchedRequest = new MatchedRequest(route, request);
                 response = route.execute(matchedRequest);

@@ -28,7 +28,7 @@ public class MatchedRequestTest {
 
     @Test
     public void requestShouldHaveNoPathParams() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/search"),
                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request = new MatchedRequest(route,Request.builder()
@@ -43,7 +43,7 @@ public class MatchedRequestTest {
 
     @Test
     public void requestShouldHaveTwoPathParams() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search/:language"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/:subscriberId/search/:language"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request =new MatchedRequest(route, Request.builder()
@@ -63,7 +63,7 @@ public class MatchedRequestTest {
 
     @Test
     public void requestShouldHaveOnePathParam() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
         Request request = new MatchedRequest(route,Request.builder()

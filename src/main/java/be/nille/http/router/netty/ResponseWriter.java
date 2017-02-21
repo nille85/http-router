@@ -13,7 +13,7 @@ import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.MatchedRequest;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;

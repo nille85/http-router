@@ -22,10 +22,10 @@ import lombok.Getter;
 @Getter
 public class MatchedRequest implements Request {
     
-    private final Route route;
+    private final DefaultRoute route;
     private final Request request;
     
-    public MatchedRequest(final Route route, final Request request){
+    public MatchedRequest(final DefaultRoute route, final Request request){
         this.request = request;
         this.route = route;
     }
@@ -46,7 +46,7 @@ public class MatchedRequest implements Request {
         return pathParams;
     }
     
-     private List<String> getKeys(Route route){
+     private List<String> getKeys(DefaultRoute route){
         
         final String pathValue = route.getPath().getValue();
          
@@ -60,13 +60,13 @@ public class MatchedRequest implements Request {
         return keys;
      }
 
-    private List<String> getValues(Request request, Route route) {
+    private List<String> getValues(Request request, DefaultRoute route) {
         List<String> values = new ArrayList<>();
         final String pathValue = route.getPath().getValue();
         String pathRegex = pathValue.replaceAll(":([^:/]*)", "(.*)");
       
         Pattern pattern = Pattern.compile(pathRegex);
-        final String requestPath = request.getUri().getPath();
+        final String requestPath = request.getPath().getValue();
         Matcher matcher = pattern.matcher(requestPath);
         if(matcher.matches()){
             for(int i=1; i<=matcher.groupCount();i++){
@@ -81,10 +81,7 @@ public class MatchedRequest implements Request {
         return request.getMethod();
     }
 
-    @Override
-    public URI getUri() {
-        return request.getUri();
-    }
+   
 
     @Override
     public Map<String, List<String>> getQueryParameters() {
@@ -106,7 +103,12 @@ public class MatchedRequest implements Request {
     
     @Override
     public String toString(){
-        return String.format("Request[ method : %s, uri: %s", request.getMethod(), request.getUri().toString());
+        return String.format("Request[ method : %s, path: %s", request.getMethod(), request.getPath());
+    }
+
+    @Override
+    public Path getPath() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     

@@ -7,7 +7,7 @@ package be.nille.http.router;
 
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,31 +22,31 @@ import lombok.extern.slf4j.Slf4j;
 public final class RouteRegistry {
 
     @Getter
-    private final List<Route> routes;
+    private final List<DefaultRoute> routes;
    
     public RouteRegistry() {
         routes = new ArrayList<>();    
     }
     
-    private RouteRegistry(List<Route> routes){
+    private RouteRegistry(List<DefaultRoute> routes){
         this.routes = routes;
     }
     
-    public RouteRegistry add(final Route route) {
-        List<Route> copiedRoutes = this.routes;
+    public RouteRegistry add(final DefaultRoute route) {
+        List<DefaultRoute> copiedRoutes = this.routes;
         copiedRoutes.add(route);
         return new RouteRegistry(copiedRoutes);
     }
     
-    public Route find(Method method, String requestPath) throws StatusCodeException {
-        List<Route> filteredByPath = findRoutesByPath(this.routes,requestPath);
-        List<Route> filteredByMethod = findRoutesByMethod(filteredByPath, method);
+    public DefaultRoute find(Method method, String requestPath) throws StatusCodeException {
+        List<DefaultRoute> filteredByPath = findRoutesByPath(this.routes,requestPath);
+        List<DefaultRoute> filteredByMethod = findRoutesByMethod(filteredByPath, method);
         return filteredByMethod.get(0);
     }
     
     
-    private List<Route> findRoutesByPath(List<Route> routes, String requestPath) throws StatusCodeException{
-        List<Route> filteredRoutes
+    private List<DefaultRoute> findRoutesByPath(List<DefaultRoute> routes, String requestPath) throws StatusCodeException{
+        List<DefaultRoute> filteredRoutes
                 = routes
                 .stream()
                 .filter(route -> route.matchesResource(requestPath))
@@ -62,8 +62,8 @@ public final class RouteRegistry {
         
     }
     
-    private List<Route> findRoutesByMethod(List<Route> routes, Method method) throws StatusCodeException{
-        List<Route> filteredRoutes
+    private List<DefaultRoute> findRoutesByMethod(List<DefaultRoute> routes, Method method) throws StatusCodeException{
+        List<DefaultRoute> filteredRoutes
                 = routes
                 .stream()
                 .filter(route -> route.matchesMethod(method))

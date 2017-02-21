@@ -7,7 +7,7 @@ package be.nille.http.router;
 
 import be.nille.http.router.response.Response;
 import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import be.nille.http.router.route.Path;
 import static junit.framework.Assert.assertEquals;
 
@@ -40,12 +40,12 @@ public class HttpRouterTest {
     @Test
     public void routerShouldAddRoutesCorrectlyToRegistry() throws Exception{
         
-        router.addRoute(new Route(
+        router.addRoute(new DefaultRoute(
                 Method.GET,
                 "/subscriptions",
                 (request) -> Response.builder().build()
         ));
-        router.addRoute(new Route(
+        router.addRoute(new DefaultRoute(
                 Method.POST,
                 "/subscriptions",
                 (request) -> Response.builder().build()
@@ -63,7 +63,7 @@ public class HttpRouterTest {
     @Test
     public void routerShouldStartWhenRoutesAreDefined() throws Exception{
          Mockito.doNothing().when(httpServer).run(any(RouteRegistry.class));
-        router.addRoute(new Route(
+        router.addRoute(new DefaultRoute(
                 Method.GET,
                 "/subscriptions",
                 (request) -> Response.builder().build()
@@ -76,7 +76,7 @@ public class HttpRouterTest {
     @Test(expected = RuntimeException.class)
     public void routerShouldThrowExceptionWhenServerThrowsException() throws Exception{
         Mockito.doThrow(new RuntimeException("Http server exception")).when(httpServer).run(any(RouteRegistry.class));
-        router.addRoute(new Route(
+        router.addRoute(new DefaultRoute(
                 Method.GET,
                 "/subscriptions",
                 (request) -> Response.builder().build()

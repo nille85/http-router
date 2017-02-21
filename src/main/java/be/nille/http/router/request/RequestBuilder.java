@@ -7,7 +7,7 @@ package be.nille.http.router.request;
 
 import be.nille.http.router.request.Request.Body;
 import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import java.net.URI;

@@ -7,6 +7,7 @@ package be.nille.http.router.request;
 
 
 import be.nille.http.router.route.Method;
+import be.nille.http.router.route.Path;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import java.net.URI;
 import java.util.List;
@@ -18,24 +19,26 @@ import lombok.extern.slf4j.Slf4j;
  *
  * @author nholvoet
  */
-@Getter
+
 @Slf4j
 public class DefaultRequest implements Request {
-    
-    private final Method method;
-    
-    private final URI uri;
-  
-    private final Map<String,String> headers;
-    
    
-    
+    @Getter
+    private final Method method;
+    @Getter
+    private final Path path;
+    @Getter
+    private final Map<String,String> headers;
+    @Getter
     private final Body body;
+    
+    private final QueryStringDecoder queryStringDecoder;
        
     public DefaultRequest(final Method method, final URI uri, final Body body,
             Map<String,String> headers){
         this.method = method;
-        this.uri = uri;
+        this.queryStringDecoder = new QueryStringDecoder(uri);
+        this.path = new Path(uri.getPath());
         this.headers = headers;
         this.body = body;
     }
@@ -43,7 +46,6 @@ public class DefaultRequest implements Request {
     
     @Override
     public Map<String,List<String>> getQueryParameters(){
-      QueryStringDecoder queryStringDecoder = new QueryStringDecoder(uri);
       Map<String, List<String>> params = queryStringDecoder.parameters();
       return params;
     }
@@ -52,14 +54,6 @@ public class DefaultRequest implements Request {
     public Map<String, String> getPathParameters() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    
-   
 
-  
-
-    
-    
-    
-    
+ 
 }

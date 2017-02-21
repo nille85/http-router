@@ -12,7 +12,7 @@ import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.Path;
 import be.nille.http.router.route.RequestHandler;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 import static junit.framework.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
@@ -30,16 +30,16 @@ public class RouteRegistryTest {
    @Before
    public void setup(){
        registry = new RouteRegistry()
-                .add(new Route("GET", "/subscriptions/:subscriptionId",new TestRequestHandler())
+                .add(new DefaultRoute("GET", "/subscriptions/:subscriptionId",new TestRequestHandler())
                 )
-                .add(new Route("POST", "/subscriptions",new TestRequestHandler())
+                .add(new DefaultRoute("POST", "/subscriptions",new TestRequestHandler())
                 );
    }
     
     @Test
     public void shouldFindRegisteredRoute() throws StatusCodeException{
           
-       Route route = registry.find(new Method(Method.GET),"/subscriptions/20");
+       DefaultRoute route = registry.find(new Method(Method.GET),"/subscriptions/20");
        assertTrue(route.matchesMethod(new Method(Method.GET)));
        assertTrue(route.matchesResource("/subscriptions/20"));
             
@@ -59,7 +59,7 @@ public class RouteRegistryTest {
     @Test
     public void shouldNotFindRoute() throws StatusCodeException{
           
-       Route route = registry.find(new Method(Method.GET),"/subscriptions/20");
+       DefaultRoute route = registry.find(new Method(Method.GET),"/subscriptions/20");
        assertTrue(route.matchesMethod(new Method(Method.GET)));
        assertTrue(route.matchesResource("/subscriptions/20"));
             
@@ -82,8 +82,7 @@ public class RouteRegistryTest {
     public void testx() throws StatusCodeException{
         
         RouteRegistry reg = new RouteRegistry();
-        reg.add(
-                new Route(
+        reg.add(new DefaultRoute(
                         new Method(Method.GET),
                         new Path("/subscriptions"),
                        (request) -> Response.builder().build()
@@ -91,8 +90,7 @@ public class RouteRegistryTest {
         );
         
         
-        reg.add(
-                new Route(
+        reg.add(new DefaultRoute(
                         new Method(Method.POST),
                         new Path("/:personId/persons"),
                        (request) -> Response.builder().build()
@@ -100,7 +98,7 @@ public class RouteRegistryTest {
                 )
         );
         
-        Route route = reg.find(new Method(Method.POST), "/subscriptions");
+        DefaultRoute route = reg.find(new Method(Method.POST), "/subscriptions");
         log.debug(route.toString());
     }
     

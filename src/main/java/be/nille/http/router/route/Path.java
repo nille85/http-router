@@ -5,6 +5,8 @@
  */
 package be.nille.http.router.route;
 
+import be.nille.http.router.request.Request;
+import be.nille.http.router.request.RequestComponent;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +18,18 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @ToString
 @Slf4j
-public class Path {
-    
+public class Path implements RequestComponent {
+
     private final String value;
-    
-    public Path(final String value){
+
+    public Path(final String value) {
         this.value = value;
     }
-    
-    
+
+    @Override
+    public boolean matches(Request request) {
+        String requestPath = request.getPath().getValue();
+        return value.equals(requestPath);
+    }
+
 }

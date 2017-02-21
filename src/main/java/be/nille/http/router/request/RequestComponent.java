@@ -3,22 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router;
-
-import be.nille.http.router.route.DefaultRoute;
-import java.util.List;
+package be.nille.http.router.request;
 
 /**
  *
  * @author nholvoet
  */
-public interface Router {
+public interface RequestComponent {
     
-    void start();
     
-    void addRoute(DefaultRoute route);
-    
-    List<DefaultRoute> getRoutes();
-    
+    boolean matches(Request request);
     
 }

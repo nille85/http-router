@@ -23,7 +23,7 @@ public class RouteTest {
 
     @Test
     public void pathShouldMatchWhenSameAsInURL() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/1/search"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
@@ -33,7 +33,7 @@ public class RouteTest {
     @Test
     public void pathShouldMatchWhenSameAsInURLWithParameters() throws URISyntaxException {
 
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/1/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/1/search"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
 
@@ -43,7 +43,7 @@ public class RouteTest {
 
     @Test
     public void pathShouldMatchWhenSameAsInURLWithPathParam() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
@@ -54,7 +54,7 @@ public class RouteTest {
     
     @Test
     public void pathShouldMatchWhenSameAsInURLWithPathParamAtEnd() throws URISyntaxException {
-        Route route = new Route(new Method(Method.GET), new Path("/subscriber/search/:subscriberId"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/search/:subscriberId"),
                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
      
@@ -66,7 +66,7 @@ public class RouteTest {
     @Test
     public void pathShouldNotMatchWhenDifferentAsInUrl() throws URISyntaxException {
 
-        Route route = new Route(new Method(Method.GET), new Path("/subscription/2/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscription/2/search"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
 
@@ -76,7 +76,7 @@ public class RouteTest {
     @Test
     public void pathShouldNotMatchWhenDifferentStart() throws URISyntaxException {
 
-        Route route = new Route(new Method(Method.GET), new Path("subscription/1/search"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("subscription/1/search"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
        
@@ -87,7 +87,7 @@ public class RouteTest {
     @Test
     public void pathShouldNotMatchWhenDifferentEnd() throws URISyntaxException {
 
-        Route route = new Route(new Method(Method.GET), new Path("subscription/1/searchp"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("subscription/1/searchp"),
                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
       
@@ -99,7 +99,7 @@ public class RouteTest {
     @Test
     public void test() throws URISyntaxException {
 
-        Route route = new Route(new Method(Method.POST), new Path("/:personId/persons"),
+        DefaultRoute route = new DefaultRoute(new Method(Method.POST), new Path("/:personId/persons"),
                 (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
 
       

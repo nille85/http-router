@@ -8,7 +8,7 @@ package be.nille.http.router;
 import be.nille.http.router.exception.DefaultExceptionHandler;
 import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.netty.NettyHttpServer;
-import be.nille.http.router.route.Route;
+import be.nille.http.router.route.DefaultRoute;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class HttpRouter implements Router {
     }
 
     @Override
-    public void addRoute(final Route route) {
+    public void addRoute(final DefaultRoute route) {
         this.registry.add(route);
         log.info(String.format("Route added with path %s and method %s", route.getPath(), route.getMethod()));
        
@@ -65,7 +65,7 @@ public class HttpRouter implements Router {
     }
 
     @Override
-    public List<Route> getRoutes() {
+    public List<DefaultRoute> getRoutes() {
         return registry.getRoutes();
     }
 
