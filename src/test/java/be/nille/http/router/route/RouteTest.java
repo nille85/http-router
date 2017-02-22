@@ -5,108 +5,43 @@
  */
 package be.nille.http.router.route;
 
-import be.nille.http.router.response.Body;
-import be.nille.http.router.response.DefaultResponse;
 import be.nille.http.router.media.TextMedia;
-import java.net.URISyntaxException;
-import static junit.framework.Assert.assertFalse;
+import be.nille.http.router.request.Request;
+import be.nille.http.router.response.Response;
 import static junit.framework.Assert.assertTrue;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
  *
- * @author Niels Holvoet
+ * @author nholvoet
  */
-@Slf4j
 public class RouteTest {
-
-    @Test
-    public void pathShouldMatchWhenSameAsInURL() throws URISyntaxException {
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/1/search"),
-                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-       
-        assertTrue(route.matchesResource("/subscriber/1/search"));
-    }
-
-    @Test
-    public void pathShouldMatchWhenSameAsInURLWithParameters() throws URISyntaxException {
-
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/1/search"),
-                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-
-
-        assertTrue(route.matchesResource("/subscriber/1/search?hello=p"));
-    }
-
-    @Test
-    public void pathShouldMatchWhenSameAsInURLWithPathParam() throws URISyntaxException {
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/:subscriberId/search"),
-              (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-       
-
-        assertTrue(route.matchesResource("/subscriber/1/search"));
-
-    }
     
     @Test
-    public void pathShouldMatchWhenSameAsInURLWithPathParamAtEnd() throws URISyntaxException {
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscriber/search/:subscriberId"),
-               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
+    public void routeShouldMatchRequestWhenMethodAndPathAreTheSameAsInRequest(){
+       
+        Route route = new Route(new MyCallback())
+                .addMatcher(new Method(Method.GET))
+                .addMatcher(new Path("/subscribers"));
+        
+        
+                
+        Request request = Request.builder()
+                .withMethod(Method.GET)
+                .withURI("http://localhost:8080/subscribers")
+                .build();
+        assertTrue(route.matches(request));
+    }
+    
+    
+    private static class MyCallback implements RouteCallback{
 
+        @Override
+        public Response handle(Request request) {
+           return Response.builder()
+                   .withBody(new TextMedia("sdlkf"))
+                   .build();
+        }
+    }
      
-
-        assertTrue(route.matchesResource("/subscriber/search/1"));
-
-    }
-
-    @Test
-    public void pathShouldNotMatchWhenDifferentAsInUrl() throws URISyntaxException {
-
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("/subscription/2/search"),
-                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-
-        assertFalse(route.matchesResource("/subscriber/1/search"));
-    }
-
-    @Test
-    public void pathShouldNotMatchWhenDifferentStart() throws URISyntaxException {
-
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("subscription/1/search"),
-                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-       
-
-        assertFalse(route.matchesResource("/subscription/1/search"));
-    }
-
-    @Test
-    public void pathShouldNotMatchWhenDifferentEnd() throws URISyntaxException {
-
-        DefaultRoute route = new DefaultRoute(new Method(Method.GET), new Path("subscription/1/searchp"),
-               (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-      
-
-        assertFalse(route.matchesResource("/subscription/1/search"));
-    }
-    
-    
-    @Test
-    public void test() throws URISyntaxException {
-
-        DefaultRoute route = new DefaultRoute(new Method(Method.POST), new Path("/:personId/persons"),
-                (request) -> new DefaultResponse(new Body(new TextMedia("content"))));
-
-      
-
-        assertFalse(route.matchesResource("/subscriptions"));
-    }
-    
-    
-    
 }

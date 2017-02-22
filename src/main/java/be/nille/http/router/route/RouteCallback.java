@@ -13,7 +13,7 @@ import be.nille.http.router.response.Response;
  * @author nholvoet
  */
 @FunctionalInterface
-public interface RequestCallback {
+public interface RouteCallback {
     
     
     Response handle(Request request);

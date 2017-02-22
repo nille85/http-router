@@ -18,13 +18,13 @@ import java.util.List;
 public final class Route {
 
     private final List<RequestMatcher> matchers;
-    private final RequestCallback function;
+    private final RouteCallback function;
 
-    public Route(final RequestCallback function) {
+    public Route(final RouteCallback function) {
         this(new ArrayList<>(), function);
     }
 
-    public Route(final List<RequestMatcher> matchers, final RequestCallback function) {
+    public Route(final List<RequestMatcher> matchers, final RouteCallback function) {
         this.matchers = matchers;
         this.function = function;
     }

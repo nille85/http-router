@@ -18,13 +18,13 @@ import java.util.List;
 public class SimpleRoute implements OldRoute{
     
     private final List<RequestMatcher> matchers;
-    private final RequestCallback successHandler;
+    private final RouteCallback successHandler;
     
-    public SimpleRoute(final RequestCallback successHandler){
+    public SimpleRoute(final RouteCallback successHandler){
         this(new ArrayList<>(), successHandler); 
     }
     
-    public SimpleRoute(final List<RequestMatcher> matchers, final RequestCallback successHandler){
+    public SimpleRoute(final List<RequestMatcher> matchers, final RouteCallback successHandler){
         this.matchers = matchers;
         this.successHandler = successHandler;
     }
