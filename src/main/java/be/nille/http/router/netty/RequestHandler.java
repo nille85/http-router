@@ -8,10 +8,11 @@ package be.nille.http.router.netty;
 import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
 import be.nille.http.router.RouteRegistry;
-import be.nille.http.router.StatusCodeException;
+
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;
+import be.nille.http.router.response.StatusCodeException;
 import be.nille.http.router.route.MatchedRequest;
 import be.nille.http.router.route.DefaultRoute;
 import io.netty.channel.ChannelHandlerContext;

@@ -8,7 +8,7 @@ package be.nille.http.router.netty;
 import be.nille.http.router.exception.ExceptionHandler;
 import be.nille.http.router.HttpRouterException;
 import be.nille.http.router.RouteRegistry;
-import be.nille.http.router.StatusCodeException;
+import be.nille.http.router.v2.response.StatusCodeException;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 import be.nille.http.router.response.StatusCode;

@@ -5,6 +5,7 @@
  */
 package be.nille.http.router;
 
+import be.nille.http.router.response.StatusCodeException;
 import be.nille.http.router.response.StatusCode;
 import be.nille.http.router.route.Method;
 import be.nille.http.router.route.DefaultRoute;

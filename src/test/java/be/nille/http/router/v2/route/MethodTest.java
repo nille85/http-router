@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.route;
+package be.nille.http.router.v2.route;
 
 import be.nille.http.router.request.Request;
+import be.nille.http.router.route.Method;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
