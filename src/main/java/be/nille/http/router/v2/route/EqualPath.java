@@ -5,8 +5,9 @@
  */
 package be.nille.http.router.v2.route;
 
-import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestMatcher;
+
+import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RequestMatcher;
 import lombok.Getter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +19,17 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @ToString
 @Slf4j
-public class Path implements RequestMatcher {
+public class EqualPath implements RequestMatcher {
 
     private final String value;
 
-    public Path(final String value) {
+    public EqualPath(final String value) {
         this.value = value;
     }
 
     @Override
     public boolean matches(Request request) {
-        String requestPath = request.getPath().getValue();
+        String requestPath = request.getPath();
         return value.equals(requestPath);
     }
 

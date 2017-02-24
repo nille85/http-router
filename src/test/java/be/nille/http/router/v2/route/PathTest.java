@@ -6,7 +6,12 @@
 package be.nille.http.router.v2.route;
 
 
-import be.nille.http.router.request.Request;
+
+import be.nille.http.router.media.TextMedia;
+import be.nille.http.router.v2.request.Request;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
@@ -19,33 +24,45 @@ public class PathTest {
     
     
     @Test
-    public void routeShouldMatchRequestWhenPathIsTheSame(){
-        Path path = new Path("/subscriptions");
-        Request request = Request.builder()
-                .withMethod(Method.GET)
-                .withURI("http://localhost:8080/subscriptions")
-                .build();
+    public void routeShouldMatchRequestWhenPathIsTheSame() throws URISyntaxException{
+        EqualPath path = new EqualPath("/subscriptions");
+       
+        Request request = new Request(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscriptions"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
         assertTrue(path.matches(request));
     }
     
+    
     @Test
-    public void routeShouldNotMatchRequestWhenPathIsDifferent(){
-        Path path = new Path("/subscriptions");
-        Request request = Request.builder()
-                .withMethod(Method.GET)
-                .withURI("http://localhost:8080/subscribers")
-                .build();
+    public void routeShouldNotMatchRequestWhenPathIsDifferent() throws URISyntaxException{
+        EqualPath path = new EqualPath("/subscriptions");
+        
+        
+        Request request = new Request(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscribers"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
+        
         assertFalse(path.matches(request));
     }
     
     @Test
-    public void routeShouldMatchRequestWhenRequestPathContainsParameters(){
-        Path path = new Path("/subscriptions");
-        Request request = Request.builder()
-                .withMethod(Method.GET)
-                .withURI("http://localhost:8080/subscriptions?param1=something&param2=somethingelse")
-                .build();
+    public void routeShouldMatchRequestWhenRequestPathContainsParameters() throws URISyntaxException{
+        EqualPath path = new EqualPath("/subscriptions");   
+         Request request = new Request(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscriptions?param1=something&param2=somethingelse"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
         assertTrue(path.matches(request));
     }
+    
     
 }

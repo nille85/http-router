@@ -7,6 +7,8 @@ package be.nille.http.router.v2.route;
 
 import be.nille.http.router.v2.response.StatusCodeException;
 import be.nille.http.router.request.Request;
+import be.nille.http.router.v2.response.Response;
+
 import be.nille.http.router.v2.response.StatusCode;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,29 +20,29 @@ import lombok.extern.slf4j.Slf4j;
  * @author nholvoet
  */
 @Slf4j
-public final class RouteRegistry {
+public final class Router {
 
     @Getter
     private final List<Route> routes;
 
-    public RouteRegistry() {
+    public Router() {
         routes = new ArrayList<>();
     }
 
-    private RouteRegistry(List<Route> routes) {
+    private Router(List<Route> routes) {
         this.routes = routes;
     }
 
-    public RouteRegistry add(final Route route) {
+    public Router add(final Route route) {
         List<Route> copiedRoutes = this.routes;
         copiedRoutes.add(route);
-        return new RouteRegistry(copiedRoutes);
+        return new Router(copiedRoutes);
     }
 
-    public Route find(final Request request) throws StatusCodeException {
+    public Response evaluate(final Request request) throws StatusCodeException {
         for (Route route : routes) {
             if (route.matches(request)) {
-                return route;
+                return route.execute(request);              
             }
         }
         throw new StatusCodeException(new StatusCode(StatusCode.NOT_FOUND));

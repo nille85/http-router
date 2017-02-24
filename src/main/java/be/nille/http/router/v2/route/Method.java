@@ -5,8 +5,9 @@
  */
 package be.nille.http.router.v2.route;
 
-import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestMatcher;
+
+import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RequestMatcher;
 import java.util.Objects;
 import lombok.Getter;
 import lombok.ToString;
@@ -52,6 +53,8 @@ public class Method implements RequestMatcher{
         return true;
     }
     
+   
+
     @Override
     public boolean matches(Request request) {
        return this.equals(request.getMethod());
