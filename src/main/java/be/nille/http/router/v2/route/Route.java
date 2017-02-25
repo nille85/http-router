@@ -45,7 +45,7 @@ public final class Route {
     }
     
     public Response execute(RouterRequest request){
-        return function.handle(request);
+        return function.execute(request);
                 
     }
     

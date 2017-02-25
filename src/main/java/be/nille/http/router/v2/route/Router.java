@@ -11,6 +11,7 @@ import be.nille.http.router.v2.response.StatusCodeException;
 import be.nille.http.router.v2.response.Response;
 
 import be.nille.http.router.v2.response.StatusCode;
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -23,27 +24,31 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public final class Router {
 
-    @Getter
-    private final List<Route> routes;
+
+    private final List<RouteCallback> callbacks;
 
     public Router() {
-        routes = new ArrayList<>();
+        callbacks = ImmutableList.of();
     }
 
-    private Router(List<Route> routes) {
-        this.routes = routes;
+    private Router(final List<RouteCallback> callbacks) {
+        this.callbacks = callbacks;
     }
 
-    public Router add(final Route route) {
-        List<Route> copiedRoutes = this.routes;
-        copiedRoutes.add(route);
-        return new Router(copiedRoutes);
+    public Router addCallback(final RouteCallback callback) {
+        List<RouteCallback> copy = new ArrayList<>(callbacks);
+        copy.add(callback);
+        return new Router(ImmutableList.copyOf(copy));
+    }
+    
+    List<RouteCallback> getCallbacks(){
+        return ImmutableList.copyOf(callbacks);
     }
 
     public Response evaluate(final RouterRequest request) throws StatusCodeException {
-        for (Route route : routes) {
-            if (route.matches(request)) {
-                return route.execute(request);              
+        for (RouteCallback callback : callbacks) {
+            if (callback.matches(request)) {
+                return callback.execute(request);              
             }
         }
         throw new StatusCodeException(new StatusCode(StatusCode.NOT_FOUND));
