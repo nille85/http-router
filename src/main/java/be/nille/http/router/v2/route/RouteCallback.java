@@ -5,7 +5,8 @@
  */
 package be.nille.http.router.v2.route;
 
-import be.nille.http.router.request.Request;
+
+import be.nille.http.router.v2.request.RouterRequest;
 import be.nille.http.router.v2.response.Response;
 
 
@@ -17,6 +18,6 @@ import be.nille.http.router.v2.response.Response;
 public interface RouteCallback {
     
     
-    Response handle(Request request);
+    Response handle(RouterRequest request);
     
 }

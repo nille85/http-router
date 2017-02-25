@@ -7,6 +7,7 @@ package be.nille.http.router.v2.route;
 
 
 import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RouterRequest;
 import be.nille.http.router.v2.request.RequestMatcher;
 import lombok.Getter;
 import lombok.ToString;

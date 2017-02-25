@@ -5,9 +5,12 @@
  */
 package be.nille.http.router.v2.route;
 
-import be.nille.http.router.request.Request;
-import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Regex;
+import be.nille.http.router.media.TextMedia;
+import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RouterRequest;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Test;
 
@@ -18,22 +21,29 @@ import org.junit.Test;
 public class RegexTest {
     
     @Test
-    public void regexShouldMatchRequestWhenAllRequestsShouldMatch(){
+    public void regexShouldMatchRequestWhenAllRequestsShouldMatch() throws URISyntaxException{
         Regex regex = new Regex("/(.*)");
-        Request request = Request.builder()
-                .withMethod(Method.GET)
-                .withURI("http://localhost:8080/subscriptions")
-                .build();
+       
+        
+       Request request = new RouterRequest(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscriptions"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
+        
         assertTrue(regex.matches(request));
     }
     
     @Test
-    public void regexShouldMatchRequestWhenBeginIsTheSame(){
+    public void regexShouldMatchRequestWhenBeginIsTheSame() throws URISyntaxException{
         Regex regex = new Regex("/subsc(.*)");
-        Request request = Request.builder()
-                .withMethod(Method.GET)
-                .withURI("http://localhost:8080/subscriptions")
-                .build();
+        Request request = new RouterRequest(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscriptions"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
         assertTrue(regex.matches(request));
     }
     

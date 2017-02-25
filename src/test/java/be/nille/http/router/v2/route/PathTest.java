@@ -8,7 +8,7 @@ package be.nille.http.router.v2.route;
 
 
 import be.nille.http.router.media.TextMedia;
-import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RouterRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class PathTest {
     public void routeShouldMatchRequestWhenPathIsTheSame() throws URISyntaxException{
         EqualPath path = new EqualPath("/subscriptions");
        
-        Request request = new Request(
+        RouterRequest request = new RouterRequest(
                 new Method(Method.GET),
                 new URI("http://localhost:8080/subscriptions"),
                 new TextMedia("hello"),
@@ -42,7 +42,7 @@ public class PathTest {
         EqualPath path = new EqualPath("/subscriptions");
         
         
-        Request request = new Request(
+        RouterRequest request = new RouterRequest(
                 new Method(Method.GET),
                 new URI("http://localhost:8080/subscribers"),
                 new TextMedia("hello"),
@@ -55,7 +55,7 @@ public class PathTest {
     @Test
     public void routeShouldMatchRequestWhenRequestPathContainsParameters() throws URISyntaxException{
         EqualPath path = new EqualPath("/subscriptions");   
-         Request request = new Request(
+         RouterRequest request = new RouterRequest(
                 new Method(Method.GET),
                 new URI("http://localhost:8080/subscriptions?param1=something&param2=somethingelse"),
                 new TextMedia("hello"),

@@ -5,52 +5,24 @@
  */
 package be.nille.http.router.v2.request;
 
-
 import be.nille.http.router.media.Media;
-import be.nille.http.router.route.Path;
 import be.nille.http.router.v2.route.Method;
-
-import io.netty.handler.codec.http.QueryStringDecoder;
-import java.net.URI;
-import java.util.List;
 import java.util.Map;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  *
- * @author nholvoet
+ * @author Niels Holvoet
  */
+public interface Request {
+    
+    Map<String,String> getHeaders();
+    
+    Media getBody();
+    
+    Method getMethod();
+    
+    QueryParameters queryParameters();
 
-@Slf4j
-public class Request {
-   
-    @Getter
-    private final Method method;
+    public String getPath();
     
-    private final URI uri;
-    @Getter
-    private final Map<String,String> headers;
-    @Getter
-    private final Media body;
-    
-   
-    public Request(final Method method, final URI uri, final Media body,
-            Map<String,String> headers){
-        this.method = method;
-        this.uri = uri;
-        this.headers = headers;
-        this.body = body;
-    }
-    
-    
-    public QueryParameters queryParameters(){
-      return new QueryParameters(uri);
-    }
-
-    public String getPath(){
-        return uri.getPath();
-    }
-
- 
 }

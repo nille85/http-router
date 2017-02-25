@@ -5,11 +5,15 @@
  */
 package be.nille.http.router.v2.route;
 
-import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestMatcher;
+
+import be.nille.http.router.v2.request.Request;
+import be.nille.http.router.v2.request.RouterRequest;
+import be.nille.http.router.v2.request.RequestMatcher;
 import be.nille.http.router.v2.response.Response;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -40,9 +44,20 @@ public final class Route {
         return new Route(copy, this.function);
     }
     
-    public Response execute(Request request){
+    public Response execute(RouterRequest request){
         return function.handle(request);
                 
+    }
+    
+    
+    public List<String> variables(final Request request) {
+        List<String> variables = new ArrayList<>();
+        
+        
+       
+        
+        
+        return variables;
     }
    
     

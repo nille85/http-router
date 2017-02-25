@@ -5,8 +5,9 @@
  */
 package be.nille.http.router.v2.route;
 
+import be.nille.http.router.v2.request.RouterRequest;
 import be.nille.http.router.v2.response.StatusCodeException;
-import be.nille.http.router.request.Request;
+
 import be.nille.http.router.v2.response.Response;
 
 import be.nille.http.router.v2.response.StatusCode;
@@ -39,7 +40,7 @@ public final class Router {
         return new Router(copiedRoutes);
     }
 
-    public Response evaluate(final Request request) throws StatusCodeException {
+    public Response evaluate(final RouterRequest request) throws StatusCodeException {
         for (Route route : routes) {
             if (route.matches(request)) {
                 return route.execute(request);              
