@@ -15,10 +15,8 @@ import be.nille.http.router.v2.response.Response;
  * @author nholvoet
  */
 
-public interface RouteCallback {
-    
-    boolean matches(Request request);
-    
+public interface RouteHandler extends Route {
+        
     Response execute(Request request);
     
 }

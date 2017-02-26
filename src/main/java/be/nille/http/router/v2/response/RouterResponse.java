@@ -36,15 +36,15 @@ public final class RouterResponse implements Response {
         this.headers = headers;
     }
     
-    public RouterResponse statusCode(final int statusCode){
+    public RouterResponse response(final int statusCode){
         return new RouterResponse(new StatusCode(statusCode), this.body, this.headers);
     }
     
-    public RouterResponse body(final Media body){
+    public RouterResponse response(final Media body){
         return new RouterResponse(this.statusCode, body, this.headers);
     }
     
-    public RouterResponse header(final String key, final String value){
+    public RouterResponse response(final String key, final String value){
         Map<String,String> copy = headers;
         copy.put(key, value);
         return new RouterResponse(this.statusCode, body, copy);

@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.netty;
+package be.nille.http.router.v2.netty;
 
-import be.nille.http.router.request.Request;
-import be.nille.http.router.response.Response;
+
+import be.nille.http.router.v2.response.Response;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -18,6 +18,7 @@ import static io.netty.handler.codec.http.HttpHeaderNames.CONTENT_LENGTH;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
+import java.nio.charset.Charset;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResponseWriter extends ChannelInboundHandlerAdapter {
 
-    private Request.MetaData metaData;
+   
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -38,9 +39,7 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-        if (msg instanceof Request.MetaData) {
-            metaData = (Request.MetaData) msg;
-        }
+       
 
         if (msg instanceof Response) {
             Response response = (Response) msg;
@@ -48,10 +47,11 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
             log.info("creating netty response");
             FullHttpResponse nettyResponse = new DefaultFullHttpResponse(
                     HTTP_1_1, HttpResponseStatus.valueOf(response.getStatusCode().getValue()),
-                    Unpooled.copiedBuffer(response.getBody().print(), metaData.getCharset())
+                    Unpooled.copiedBuffer(response.getBody().print(), Charset.forName("UTF-8"))
             );
 
-            if (metaData.isKeepAlive()) {
+            boolean keepAlive = true;
+            if (keepAlive) {
                 // Add 'Content-Length' header only for a keep-alive connection.
                 nettyResponse.headers().set(CONTENT_LENGTH, nettyResponse.content().readableBytes());
                 // Add keep alive header as per:
@@ -65,7 +65,7 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
 
             ctx.write(nettyResponse);
 
-            if (!metaData.isKeepAlive()) {
+            if (keepAlive) {
                 ctx.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
             } else {
                 ctx.flush();

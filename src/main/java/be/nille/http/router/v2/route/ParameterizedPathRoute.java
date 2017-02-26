@@ -20,12 +20,31 @@ import java.util.regex.Pattern;
  *
  * @author Niels Holvoet
  */
-public class PathWithParams implements RequestMatcher{
+public class ParameterizedPathRoute implements RequestMatcher{
     
     private final String path;
     
-    public PathWithParams(final String path){
+    public ParameterizedPathRoute(final String path){
         this.path = path;
+    }
+    
+    @Override
+    public boolean matches(Request request) {
+        
+        //when query string is present
+        String requestPath = request.getPath().split("\\?")[0];
+        String pathValue = path;
+        //when path variable is not at the end
+        String pattern = pathValue.replaceAll(":.*/", "(.*)/");
+       
+        //when path variable is at the end
+        pattern = pattern.replaceAll(":.*[^/]", "(.*)");
+        Pattern p = Pattern.compile(pattern);
+
+        Matcher matcher = p.matcher(requestPath);
+        boolean matches = matcher.matches();
+
+        return matches;
     }
     
 
@@ -76,22 +95,5 @@ public class PathWithParams implements RequestMatcher{
         return values;
     }
 
-    @Override
-    public boolean matches(Request request) {
-        
-        //when query string is present
-        String requestPath = request.getPath().split("\\?")[0];
-        String pathValue = path;
-        //when path variable is not at the end
-        String pattern = pathValue.replaceAll(":.*/", "(.*)/");
-       
-        //when path variable is at the end
-        pattern = pattern.replaceAll(":.*[^/]", "(.*)");
-        Pattern p = Pattern.compile(pattern);
-
-        Matcher matcher = p.matcher(requestPath);
-        boolean matches = matcher.matches();
-
-        return matches;
-    }
+   
 }

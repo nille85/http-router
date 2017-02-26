@@ -3,20 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.netty;
+package be.nille.http.router.v2.netty;
 
-import be.nille.http.router.request.Request;
-import io.netty.buffer.Unpooled;
+import be.nille.http.router.netty.*;
+import be.nille.http.router.v2.request.Request;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.handler.codec.http.DefaultFullHttpResponse;
-import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
-import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.HttpResponseStatus;
 import io.netty.handler.codec.http.HttpUtil;
-import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
 import java.nio.charset.Charset;
@@ -47,10 +42,6 @@ public class RequestTransformer extends ChannelInboundHandlerAdapter  {
          if (msg instanceof HttpRequest) {
             log.info("HTTP Request received through channel");
             this.httpRequest = (HttpRequest) msg;
-            Charset charset = HttpUtil.getCharset(httpRequest);
-            
-            Request.MetaData metaData = new Request.MetaData(HttpUtil.isKeepAlive(httpRequest),  charset);
-            ctx.fireChannelRead(metaData);
             log.info("Content: " + msg.toString());
             
          }
@@ -64,7 +55,8 @@ public class RequestTransformer extends ChannelInboundHandlerAdapter  {
                 log.info("Print the whole body");
                 log.info("Content: " + contentBuffer.toString());
                 
-               
+                
+                
                 Request request = new NettyRequest(httpRequest, contentBuffer.toString() );
                 ctx.fireChannelRead(request);
                  

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.v2.route;
+package be.nille.http.router.v2.request;
 
 
 import be.nille.http.router.v2.request.Request;
@@ -19,7 +19,7 @@ import lombok.ToString;
  */
 @Getter
 @ToString
-public class Method implements RequestMatcher{
+public class Method{
 
     public static final String GET = "GET";
     public static final String PUT = "PUT";
@@ -56,9 +56,6 @@ public class Method implements RequestMatcher{
     
    
 
-    @Override
-    public boolean matches(Request request) {
-       return this.equals(request.getMethod());
-    }
+   
 
 }

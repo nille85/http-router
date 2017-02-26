@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.v2.route;
 
+import be.nille.http.router.v2.request.Method;
 import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.v2.request.Request;
 import be.nille.http.router.v2.response.RouterResponse;
@@ -27,11 +28,11 @@ public class RouterTest {
 
     @Test
     public void testApi() throws URISyntaxException, StatusCodeException {
-        Router router = new Router().
-                addCallback(
-                        new RegexAndMethodMatchCallback(new Method(Method.GET), new Regex("(/subsc.*)/(.*)"))
+        Router router = new Router()
+                .addHandler(
+                        new RegexAndMethodMatchCallback(new MethodRoute(new Method(Method.GET)), new RegexRoute("(/subsc.*)/(.*)"))
                 )
-                .addCallback(new AllwaysMatchCallback());
+                .addHandler(new AllwaysMatchCallback());
 
         RouterRequest request = new RouterRequest(
                 new Method(Method.GET),
@@ -39,16 +40,16 @@ public class RouterTest {
                 new TextMedia("hello"),
                 new HashMap<>()
         );
-        router.evaluate(request);
+        
+        Response response = router.response(request);
     }
     
     @Test
     public void testAnoterOne() throws URISyntaxException, StatusCodeException {
-        Router router = new Router().
-                addCallback(
-                        new PathWithParamsCallback(new Method(Method.GET), new PathWithParams("/subscribers/:subscriberId"))
+        Router router = new Router().addHandler(
+                        new PathWithParamsCallback(new ParameterizedPathRoute("/subscribers/:subscriberId"))
                 )
-                .addCallback(new AllwaysMatchCallback());
+                .addHandler(new AllwaysMatchCallback());
 
         RouterRequest request = new RouterRequest(
                 new Method(Method.GET),
@@ -56,17 +57,39 @@ public class RouterTest {
                 new TextMedia("hello"),
                 new HashMap<>()
         );
-        router.evaluate(request);
+        router.response(request);
+    }
+    
+    @Test
+    public void testAuthentication() throws URISyntaxException, StatusCodeException {
+        Router router = new Router().addHandler(
+                        new AuthenticationHandler(new RegexRoute("/subscribers.*"),
+                                new PathWithParamsCallback(new ParameterizedPathRoute("/subscribers/:subscriberId"))
+                        )
+                        
+                )
+                .addHandler(new AllwaysMatchCallback());
+
+        RouterRequest request = new RouterRequest(
+                new Method(Method.GET),
+                new URI("http://localhost:8080/subscribers/5?username=joh&password=passwd"),
+                new TextMedia("hello"),
+                new HashMap<>()
+        );
+        Response response = router.response(request);
+        log.debug(response.getBody().print() + ":" + response.getStatusCode().getValue());
     }
     
     
-    private static class PathWithParamsCallback implements RouteCallback {
+    
+    
+    private static class PathWithParamsCallback implements RouteHandler {
 
-        private final Method method;
-        private final PathWithParams path;
+        
+        private final ParameterizedPathRoute path;
 
-        public PathWithParamsCallback(final Method method, final PathWithParams path) {
-            this.method = method;
+        public PathWithParamsCallback( final ParameterizedPathRoute path) {
+          
             this.path = path;
         }
 
@@ -80,31 +103,31 @@ public class RouterTest {
                     .list("bla")
                     .stream()
                     .forEach(v -> log.debug(v));
-            return new RouterResponse();
+            return new RouterResponse().response(new TextMedia("hello world, authenticated"));
         }
 
         @Override
         public boolean matches(Request request) {
 
-            return method.matches(request) && path.matches(request);
+            return path.matches(request);
         }
 
     }
 
-    private static class RegexAndMethodMatchCallback implements RouteCallback {
+    private static class RegexAndMethodMatchCallback implements RouteHandler {
 
-        private final Method method;
-        private final Regex regex;
+        private final MethodRoute methodRoute;
+        private final RegexRoute regex;
 
-        public RegexAndMethodMatchCallback(final Method method, final Regex regex) {
-            this.method = method;
+        public RegexAndMethodMatchCallback(final MethodRoute methodRoute, final RegexRoute regex) {
+            this.methodRoute = methodRoute;
             this.regex = regex;
         }
 
         @Override
         public Response execute(Request request) {
 
-            regex.variables(request).stream().forEach(v -> log.debug(v));
+            regex.getVariables(request).stream().forEach(v -> log.debug(v));
 
             request
                     .queryParameters()
@@ -117,12 +140,12 @@ public class RouterTest {
         @Override
         public boolean matches(Request request) {
 
-            return method.matches(request) && regex.matches(request);
+            return methodRoute.matches(request) && regex.matches(request);
         }
 
     }
 
-    private static class AllwaysMatchCallback implements RouteCallback {
+    private static class AllwaysMatchCallback implements RouteHandler {
 
         @Override
         public Response execute(Request request) {

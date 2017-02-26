@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.v2.route;
 
+import be.nille.http.router.v2.request.Method;
 import be.nille.http.router.media.TextMedia;
 import be.nille.http.router.v2.request.Request;
 import be.nille.http.router.v2.request.RouterRequest;
@@ -22,7 +23,7 @@ public class RegexTest {
     
     @Test
     public void regexShouldMatchRequestWhenAllRequestsShouldMatch() throws URISyntaxException{
-        Regex regex = new Regex("/(.*)");
+        RegexRoute regex = new RegexRoute("/(.*)");
        
         
        Request request = new RouterRequest(
@@ -37,7 +38,7 @@ public class RegexTest {
     
     @Test
     public void regexShouldMatchRequestWhenBeginIsTheSame() throws URISyntaxException{
-        Regex regex = new Regex("/subsc(.*)");
+        RegexRoute regex = new RegexRoute("/subsc(.*)");
         Request request = new RouterRequest(
                 new Method(Method.GET),
                 new URI("http://localhost:8080/subscriptions"),

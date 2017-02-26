@@ -3,16 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.v2.request;
-
-import java.util.List;
+package be.nille.http.router.v2.netty;
 
 /**
  *
  * @author Niels Holvoet
  */
-public interface VariableContainer {
-    
-    List<String> variables(Request request);
-    
+public interface HttpServer {
+
+    void start() throws Exception;
 }

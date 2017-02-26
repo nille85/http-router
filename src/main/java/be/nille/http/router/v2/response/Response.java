@@ -21,5 +21,11 @@ public interface Response {
     StatusCode getStatusCode();
 
     Map<String, String> getHeaders();
+   
+    Response response(int statusCode);
+       
+    Response response( Media body);
+    
+    Response response(final String key, final String value);
 
 }

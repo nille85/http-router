@@ -5,6 +5,7 @@
  */
 package be.nille.http.router.v2.route;
 
+import be.nille.http.router.v2.request.Request;
 import be.nille.http.router.v2.request.RouterRequest;
 import be.nille.http.router.v2.response.StatusCodeException;
 
@@ -14,7 +15,7 @@ import be.nille.http.router.v2.response.StatusCode;
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.Getter;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -25,31 +26,32 @@ import lombok.extern.slf4j.Slf4j;
 public final class Router {
 
 
-    private final List<RouteCallback> callbacks;
+    private final List<RouteHandler> handlers;
 
     public Router() {
-        callbacks = ImmutableList.of();
+        handlers = ImmutableList.of();
     }
 
-    private Router(final List<RouteCallback> callbacks) {
-        this.callbacks = callbacks;
+    private Router(final List<RouteHandler> handlers) {
+        this.handlers = handlers;
     }
 
-    public Router addCallback(final RouteCallback callback) {
-        List<RouteCallback> copy = new ArrayList<>(callbacks);
-        copy.add(callback);
+    public Router addHandler(final RouteHandler handler) {
+        List<RouteHandler> copy = new ArrayList<>(handlers);
+        copy.add(handler);
         return new Router(ImmutableList.copyOf(copy));
     }
     
-    List<RouteCallback> getCallbacks(){
-        return ImmutableList.copyOf(callbacks);
+    List<RouteHandler> getHandlers(){
+        return ImmutableList.copyOf(handlers);
     }
 
-    public Response evaluate(final RouterRequest request) throws StatusCodeException {
-        for (RouteCallback callback : callbacks) {
-            if (callback.matches(request)) {
-                return callback.execute(request);              
+    public Response response(final Request request) throws StatusCodeException {
+        for (RouteHandler handler : handlers) {
+            if(handler.matches(request)){
+                return handler.execute(request);  
             }
+           
         }
         throw new StatusCodeException(new StatusCode(StatusCode.NOT_FOUND));
     }

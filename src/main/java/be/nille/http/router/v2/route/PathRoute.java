@@ -20,11 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Getter
 @ToString
 @Slf4j
-public class EqualPath implements RequestMatcher {
+public class PathRoute implements RequestMatcher {
 
     private final String value;
 
-    public EqualPath(final String value) {
+    public PathRoute(final String value) {
         this.value = value;
     }
 

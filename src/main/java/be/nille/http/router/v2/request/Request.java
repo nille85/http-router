@@ -6,7 +6,6 @@
 package be.nille.http.router.v2.request;
 
 import be.nille.http.router.media.Media;
-import be.nille.http.router.v2.route.Method;
 import java.util.Map;
 
 /**
