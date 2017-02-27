@@ -92,7 +92,7 @@ public class RegexRouteTest {
     @Test
     public void regexShouldMatchRequestWhenBeginIsTheSame() throws URISyntaxException {
         RegexRoute regex = new RegexRoute(
-                "^/subsc(.*)$",
+                "^/subscriptions/(.*)$",
                 (request) -> new RouteResponse(
                         new StatusCode(StatusCode.OK),
                         new TextBody(request.variables().get("1"))
@@ -100,13 +100,13 @@ public class RegexRouteTest {
         );
         Request request = new RouteRequest(
                 new Method(Method.GET),
-                new URI("http://localhost:8080/subscriptions"),
+                new URI("http://localhost:8080/subscriptions/10"),
                 new TextBody("hello"),
                 new Headers()
         );
         Response response = regex.response(request);
         log.debug(response.getBody().print());
-        assertEquals("riptions", response.getBody().print());
+        assertEquals("10", response.getBody().print());
     }
 
 }

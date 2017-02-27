@@ -6,15 +6,9 @@
 package be.nille.http.router.route;
 
 import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RouteRequest;
 import be.nille.http.router.response.EmptyResponse;
-import be.nille.http.router.response.StatusCodeException;
 import be.nille.http.router.response.Response;
-import be.nille.http.router.response.StatusCode;
-import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 
 /**

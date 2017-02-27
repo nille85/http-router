@@ -103,6 +103,19 @@ Route listRoute = new ListRoute(routes);
 new HttpRouter(listRoute).start();
 ```
 
+###RegexRoute
+A route can also be added using a regex. The groups can be captured from the request using the index of the regex group. 
+```
+RegexRoute regexRoute = new RegexRoute(
+        "^/subscriptions/(.*)$",
+        (request) -> new RouteResponse(
+                new StatusCode(StatusCode.OK),
+                new TextBody(request.variables().get("1"))
+        )
+);
+
+```
+
 
 
 
