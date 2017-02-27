@@ -96,6 +96,7 @@ Route pathMethodRoute =  new PathRoute(
                 );
             }
 ));
+routes.add(pathMethodRoute);
 
 Route listRoute = new ListRoute(routes);
 

@@ -5,7 +5,7 @@
  */
 package be.nille.http.router.route;
 
-import be.nille.http.router.route.EqualPathRoute;
+
 import be.nille.http.router.request.Method;
 import be.nille.http.router.body.TextBody;
 import be.nille.http.router.headers.Headers;
@@ -16,7 +16,6 @@ import be.nille.http.router.response.StatusCode;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import org.junit.Before;
