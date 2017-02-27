@@ -65,8 +65,7 @@ new HttpRouter(listRoute).start();
 
 
 ###PathRoute
-The PathRoute implementation can be parameterized. It can also be combined with other route implementations. The order of the route decoration does not make any difference.
-Some examples can be found underneath.
+The PathRoute implementation can be parameterized. It can also be combined with other route implementations. The outer routes are always first evaluated. 
 
 ```
 List<Route> routes = new ArrayList<>();
@@ -84,19 +83,8 @@ Route methodPathRoute = new MethodRoute(
 ));
 routes.add(methodPathRoute);
 
-
-Route pathMethodRoute =  new PathRoute(
-        "/persons/:personId",
-        new MethodRoute(
-            new Method(Method.POST),
-            (request) -> {
-                return new RouteResponse(
-                        new StatusCode(StatusCode.OK), 
-                        new TextBody("person with id : " + request.variables().get("personId"))
-                );
-            }
-));
-routes.add(pathMethodRoute);
+routes.add(otherRoute);
+...
 
 Route listRoute = new ListRoute(routes);
 
@@ -111,6 +99,83 @@ RegexRoute regexRoute = new RegexRoute(
         (request) -> new RouteResponse(
                 new StatusCode(StatusCode.OK),
                 new TextBody(request.variables().get("1"))
+        )
+);
+
+```
+
+##Building Custom Routes
+
+Custom routes can easily be created by implementing the `Route` interface.
+ 
+###LoggingRoute
+
+```
+@Slf4j
+public final class LoggingRoute implements Route {
+    
+    private final Route origin;
+    
+    public LoggingRoute(final Route route){
+        this.origin = route;
+    }
+
+    @Override
+    public Response response(Request request) {   
+        log.debug(String.format(
+                        "evaluating request with method %s and path %s",
+                        request.getMethod(),
+                        request.getPath()
+                )
+        );
+        return origin.response(request);
+    }
+    
+}
+```
+
+
+Logging can then be added to all routes using the decoration underneath.
+```
+Route listRoute = new LoggingRoute(new ListRoute(routes));
+new HttpRouter(listRoute).start();
+```
+
+
+###AuthenticatedRoute
+The example underneath checks if a request header `X-AUTH` with the value `secret` is present for the matched route.
+If the request does not contain this header, a status code `401` is returned.
+```
+public final class AuthenticatedRoute implements Route {
+    
+    private final Route origin;
+    
+    public AuthenticatedRoute(final Route route){
+        this.origin = route;
+    }
+
+    @Override
+    public Response response(Request request) {   
+        String authorizationValue = request.getHeaders().getValue("X-AUTH");
+        if("secret".equals(authorizationValue)){
+            return origin.response(request);
+        }
+        return new RouteResponse(new StatusCode(401),new TextBody("Unauthorized"),new Headers().add("content-type", "text/html"));
+        
+    }
+    
+}
+```
+It can then be used to protect certain routes. In the example below all routes are matched that start with `/protected/`.
+```
+ Route protectedRoute = new RegexRoute(
+        "^/protected/.*$",
+        new AuthenticatedRoute((request) -> {
+                    return new RouteResponse(
+                            new StatusCode(StatusCode.OK),
+                            new TextBody("This is a protected route")
+                    );
+                    }
         )
 );
 

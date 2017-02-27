@@ -30,6 +30,9 @@ public final class RouteResponse implements Response {
     public RouteResponse(){
         this(new StatusCode(200), new TextBody(""), new Headers());
     }
+    public RouteResponse(final int statusCode, final Body body){
+        this(new StatusCode(statusCode), body, new Headers());
+    }
     
     public RouteResponse(final StatusCode statusCode, final Body body){
         this(statusCode, body, new Headers());
