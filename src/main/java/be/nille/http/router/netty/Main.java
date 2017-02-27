@@ -9,12 +9,14 @@ import be.nille.http.router.body.TextBody;
 import be.nille.http.router.response.RouteResponse;
 import be.nille.http.router.request.Method;
 import be.nille.http.router.response.StatusCode;
+
 import be.nille.http.router.route.MethodRoute;
 import be.nille.http.router.route.ListRoute;
 import be.nille.http.router.route.PathRoute;
 import be.nille.http.router.route.Route;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -24,12 +26,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Main {
 
+    @Getter
+    public static class Person {
+
+        private final String firstName;
+        private final String lastName;
+
+        public Person(final String firstName, final String lastName) {
+            this.firstName = firstName;
+            this.lastName = lastName;
+        }
+    }
+
     public static void main(final String[] args) throws Exception {
 
         List<Route> routes = new ArrayList<>();
-        
-        
-        
+
+       
+
         Route methodPathRoute = new MethodRoute(
                 new Method(Method.GET),
                 new PathRoute(
@@ -40,7 +54,6 @@ public class Main {
                                     new TextBody("subscription with id : " + request.variables().get("subscriptionId"))
                             );
                         }
-                        
                 ));
         routes.add(methodPathRoute);
 
@@ -76,7 +89,7 @@ public class Main {
         );
         routes.add(deleteRoute);
 
-        Route listRoute =  new ListRoute(routes);
+        Route listRoute = new ListRoute(routes);
 
         new HttpRouter(listRoute).start();
     }

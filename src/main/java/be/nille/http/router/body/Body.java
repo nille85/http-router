@@ -10,11 +10,7 @@ package be.nille.http.router.body;
  * @author nholvoet
  */
 public interface Body {
-    
-    
+      
     String print();
-    
-   
-    
-    
+      
 }

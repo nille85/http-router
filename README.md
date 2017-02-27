@@ -205,7 +205,71 @@ public class InterceptRequestRoute implements Route{
     
 }
 
+##Other Media Types
+You can return JSON by using JsonBody instead of TextBody. The content-type header also needs to be added. 
+
 ```
+Route jsonRoute = new PathRoute("/json",
+                            (request) -> {
+                            return new RouteResponse(
+                                    new StatusCode(StatusCode.OK),
+                                    new JsonBody(new Person("John","Doe")),
+                                    new Headers().add("content-type", "application/json")
+                            );
+                        }
+                  );
+
+```
+Other Media Types can be added by implementing the Body Interface.
+```
+public interface Body {
+      
+    String print();
+      
+}
+```
+
+##Content Negotiation
+Below you can find a simple JSON content-negotiation implementation .
+
+```
+public final class JSONRoute implements Route{
+
+    private final Route origin;
+    
+    public JSONRoute(final Route route){
+        this.origin = route;
+    }
+    
+    
+    @Override
+    public Response response(Request request) {
+        final String acceptValue = request.getHeaders().getValue("Accept");
+        if(acceptValue != null && acceptValue.contains("application/json")){
+            Response response = origin.response(request);
+            return new RouteResponse(response.getStatusCode(), response.getBody(), response.getHeaders().add("Content-Type", "application/json"));
+        }
+        return new EmptyResponse();
+    }
+    
+}
+
+```
+When used, you don't need to add the content-type header for every response.
+```
+Route jsonRoutes = new JSONRoute(
+                new RegexRoute("/json",
+                        (request) -> {
+                            return new RouteResponse(
+                                    new StatusCode(StatusCode.OK),
+                                    new JsonBody(new Person("John", "Doe"))
+                            );
+
+                        })
+        );
+
+```
+
 
 ##Unit Testing
 Unit testing new routes can be done in the same way like the unit tests that are present in this library.
