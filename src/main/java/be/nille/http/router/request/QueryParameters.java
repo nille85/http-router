@@ -5,15 +5,12 @@
  */
 package be.nille.http.router.request;
 
-import com.google.common.collect.ImmutableList;
 import io.netty.handler.codec.http.QueryStringDecoder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import lombok.Getter;
-import lombok.ToString;
 
 /**
  *

@@ -63,5 +63,14 @@ public final class RouteRequest implements Request{
         return headers;
     }
 
+    @Override
+    public PathVariables variables() {
+       return new PathVariables(new HashMap<>());
+    }
+
+  
+
+    
+
  
 }

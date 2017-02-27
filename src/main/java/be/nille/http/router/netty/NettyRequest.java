@@ -11,6 +11,7 @@ import be.nille.http.router.headers.Headers;
 import be.nille.http.router.request.QueryParameters;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.request.Method;
+import be.nille.http.router.request.PathVariables;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
 import java.net.URI;
@@ -78,6 +79,11 @@ public class NettyRequest implements Request {
                     ex
             );
         }
+    }
+
+    @Override
+    public PathVariables variables() {
+        return new PathVariables(new HashMap<>());
     }
 
 }

@@ -21,6 +21,8 @@ public interface Request {
     Method getMethod();
     
     QueryParameters queryParameters();
+    
+    PathVariables variables();
 
     public String getPath();
     
