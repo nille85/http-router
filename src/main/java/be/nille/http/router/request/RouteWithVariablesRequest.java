@@ -7,7 +7,7 @@ package be.nille.http.router.request;
 
 import be.nille.http.router.body.Body;
 import be.nille.http.router.headers.Headers;
-import java.util.HashMap;
+import java.net.URI;
 import java.util.Map;
 
 /**
@@ -52,6 +52,11 @@ public class RouteWithVariablesRequest implements Request {
     @Override
     public String getPath() {
         return origin.getPath();
+    }
+
+    @Override
+    public URI getURI() {
+        return origin.getURI();
     }
 
 }

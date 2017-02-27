@@ -71,19 +71,24 @@ public class NettyRequest implements Request {
 
     @Override
     public String getPath() {
+        return getURI().getPath();
+    }
+
+    @Override
+    public PathVariables variables() {
+        return new PathVariables(new HashMap<>());
+    }
+
+    @Override
+    public URI getURI() {
         try {
-            return new URI(httpRequest.uri()).getPath();
+            return new URI(httpRequest.uri());
         } catch (URISyntaxException ex) {
             throw new RuntimeException(
                     String.format("The value %s is not a valid URI ", httpRequest.uri()),
                     ex
             );
         }
-    }
-
-    @Override
-    public PathVariables variables() {
-        return new PathVariables(new HashMap<>());
     }
 
 }

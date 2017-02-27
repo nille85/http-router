@@ -181,6 +181,56 @@ It can then be used to protect certain routes. In the example below all routes a
 
 ```
 
+###InterceptRequestRoute
+You can also easily intercept requests and pass it on to the next route.
+```
+public class InterceptRequestRoute implements Route{
+    
+    private final Route origin;
+    
+    public InterceptRequestRoute(final Route route){
+        this.origin = route;
+    }
+
+    @Override
+    public Response response(Request request) {
+        Request interceptedRequest = new RouteRequest(
+                request.getMethod(),
+                request.getURI(),
+                request.getBody(),
+                request.getHeaders().add("X-CUSTOM", "value")
+        );
+        return origin.response(interceptedRequest);
+    }
+    
+}
+
+```
+
+##Unit Testing
+Unit testing new routes can be done in the same way like the unit tests that are present in this library.
+```
+public class MethodRouteTest {
+    
+    private Route origin;
+    
+    @Before
+    public void setup(){
+        origin = (request) -> new RouteResponse(new StatusCode(StatusCode.OK), new TextBody("Hello World"));
+    }
+    
+    
+    @Test
+    public void responseShouldBeNotEmptyWhenMethodsAreEqual() throws URISyntaxException{
+        Route route = new MethodRoute(new Method(Method.GET), origin);
+        Request request = new RouteRequest(new Method(Method.GET), new URI("http://localhost/test"));
+        Response response = route.response(request);
+        assertFalse(response.isEmpty());
+        //test other attributes of response
+    }
+}
+```
+
 
 
 

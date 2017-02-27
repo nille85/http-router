@@ -44,6 +44,10 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         
+        if (msg instanceof HttpMetaData) {
+            ctx.fireChannelRead(msg);
+        }
+        
         if (msg instanceof Request) {
             Response response;
             Request request = (Request) msg;

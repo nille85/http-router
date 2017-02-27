@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ResponseWriter extends ChannelInboundHandlerAdapter {
 
-   
+   private HttpMetaData metaData;
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) {
@@ -39,7 +39,9 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 
-       
+       if (msg instanceof HttpMetaData) {
+            metaData = (HttpMetaData) msg;
+        }
 
         if (msg instanceof Response) {
             Response response = (Response) msg;
@@ -47,10 +49,10 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
             log.info("creating netty response");
             FullHttpResponse nettyResponse = new DefaultFullHttpResponse(
                     HTTP_1_1, HttpResponseStatus.valueOf(response.getStatusCode().getValue()),
-                    Unpooled.copiedBuffer(response.getBody().print(), Charset.forName("UTF-8"))
+                    Unpooled.copiedBuffer(response.getBody().print(), metaData.getCharset())
             );
 
-            boolean keepAlive = true;
+            boolean keepAlive = metaData.isKeepAlive();
             if (keepAlive) {
                 // Add 'Content-Length' header only for a keep-alive connection.
                 nettyResponse.headers().set(CONTENT_LENGTH, nettyResponse.content().readableBytes());

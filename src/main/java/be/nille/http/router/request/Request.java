@@ -7,6 +7,7 @@ package be.nille.http.router.request;
 
 import be.nille.http.router.body.Body;
 import be.nille.http.router.headers.Headers;
+import java.net.URI;
 
 /**
  *
@@ -17,6 +18,8 @@ public interface Request {
     Headers getHeaders();
     
     Body getBody();
+    
+    URI getURI();
     
     Method getMethod();
     

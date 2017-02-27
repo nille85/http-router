@@ -10,8 +10,10 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpRequest;
+import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.LastHttpContent;
 import io.netty.util.CharsetUtil;
+import java.nio.charset.Charset;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,6 +40,10 @@ public class RequestTransformer extends ChannelInboundHandlerAdapter  {
          if (msg instanceof HttpRequest) {
             log.info("HTTP Request received through channel");
             this.httpRequest = (HttpRequest) msg;
+            Charset charset = HttpUtil.getCharset(httpRequest);
+            
+            HttpMetaData metaData = new HttpMetaData(HttpUtil.isKeepAlive(httpRequest),  charset);
+            ctx.fireChannelRead(metaData);
             log.info("Content: " + msg.toString());
             
          }

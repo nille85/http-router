@@ -9,11 +9,9 @@ package be.nille.http.router.request;
 import be.nille.http.router.body.Body;
 import be.nille.http.router.body.TextBody;
 import be.nille.http.router.headers.Headers;
-import com.google.common.collect.ImmutableMap;
 
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +26,7 @@ public final class RouteRequest implements Request{
     @Getter
     private final Method method;
     
+   
     private final URI uri;
   
     private final Headers headers;
@@ -66,6 +65,11 @@ public final class RouteRequest implements Request{
     @Override
     public PathVariables variables() {
        return new PathVariables(new HashMap<>());
+    }
+
+    @Override
+    public URI getURI() {
+        return uri;
     }
 
   
