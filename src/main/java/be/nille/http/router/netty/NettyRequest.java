@@ -5,17 +5,17 @@
  */
 package be.nille.http.router.netty;
 
+import be.nille.http.router.body.Body;
+import be.nille.http.router.body.TextBody;
+import be.nille.http.router.headers.Headers;
+import be.nille.http.router.request.QueryParameters;
 import be.nille.http.router.request.Request;
-import be.nille.http.router.route.Method;
-import be.nille.http.router.route.Path;
-
+import be.nille.http.router.request.Method;
 import io.netty.handler.codec.http.HttpHeaders;
 import io.netty.handler.codec.http.HttpRequest;
-import io.netty.handler.codec.http.QueryStringDecoder;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,38 +23,24 @@ import java.util.Map;
  * @author nholvoet
  */
 public class NettyRequest implements Request {
-    
+
     private final HttpRequest httpRequest;
     private final String httpContent;
-    
-    public NettyRequest(final HttpRequest httpRequest, final String httpContent){
+
+    public NettyRequest(final HttpRequest httpRequest, final String httpContent) {
         this.httpRequest = httpRequest;
         this.httpContent = httpContent;
     }
 
     @Override
-    public Method getMethod() {
-        return new Method(httpRequest.method().name());
-    }
-
-
-    @Override
-    public Map<String, List<String>> getQueryParameters() {
-      QueryStringDecoder queryStringDecoder = new QueryStringDecoder(httpRequest.uri());
-      Map<String, List<String>> params = queryStringDecoder.parameters();
-      return params;
-    }
-
-
-    @Override
-    public Map<String, String> getHeaders() {
+    public Headers getHeaders() {
         HttpHeaders headers = httpRequest.headers();
 
-        Map<String, String> copiedHeaders = new HashMap<>();
+        Headers copiedHeaders = new Headers();
+
         if (!headers.isEmpty()) {
             for (Map.Entry<String, String> h : headers) {
-                copiedHeaders.put(h.getKey(), h.getValue());
-
+                copiedHeaders = copiedHeaders.add(h.getKey(), h.getValue());
             }
         }
         return copiedHeaders;
@@ -62,18 +48,18 @@ public class NettyRequest implements Request {
 
     @Override
     public Body getBody() {
-        return new Body(httpContent);
+        return new TextBody(httpContent);
     }
 
     @Override
-    public Map<String, String> getPathParameters() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Method getMethod() {
+        return new Method(httpRequest.method().name());
     }
 
     @Override
-    public Path getPath() {
+    public QueryParameters queryParameters() {
         try {
-            return new Path(new URI(httpRequest.uri()).getPath());
+            return new QueryParameters(new URI(httpRequest.uri()));
         } catch (URISyntaxException ex) {
             throw new RuntimeException(
                     String.format("The value %s is not a valid URI ", httpRequest.uri()),
@@ -81,5 +67,17 @@ public class NettyRequest implements Request {
             );
         }
     }
-    
+
+    @Override
+    public String getPath() {
+        try {
+            return new URI(httpRequest.uri()).getPath();
+        } catch (URISyntaxException ex) {
+            throw new RuntimeException(
+                    String.format("The value %s is not a valid URI ", httpRequest.uri()),
+                    ex
+            );
+        }
+    }
+
 }

@@ -6,7 +6,9 @@
 package be.nille.http.router.response;
 
 
-import java.util.Map;
+
+import be.nille.http.router.body.Body;
+import be.nille.http.router.headers.Headers;
 
 /**
  *
@@ -18,18 +20,8 @@ public interface Response {
 
     StatusCode getStatusCode();
 
-    Map<String, String> getHeaders();
-
-    
-    static ResponseBuilder builder() {
-        return new ResponseBuilder();
-    }
-    
-    
-
+    Headers getHeaders();
    
-
-    
-
+    boolean isEmpty();
 
 }

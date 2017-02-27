@@ -3,7 +3,7 @@ apply plugin: "maven"
 apply plugin: 'signing'
 apply plugin: 'application'
 
-mainClassName = "be.nille.http.router.v2.netty.Main"
+mainClassName = "be.nille.http.router.netty.Main"
 
 
 sourceCompatibility = '1.8'

@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package be.nille.http.router.request;
-
-
+package be.nille.http.router.body;
 
 /**
  *
  * @author nholvoet
  */
-public interface RequestMatcher {
+public interface BodyPrinter {
     
     
-    boolean matches(Request request);
+    public String print();
     
 }

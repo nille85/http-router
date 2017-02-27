@@ -5,17 +5,12 @@
  */
 package be.nille.http.router.netty;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import io.netty.handler.codec.DecoderResult;
-import io.netty.handler.codec.http.DefaultHttpContent;
 import io.netty.handler.codec.http.DefaultHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
-import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpObject;
-import io.netty.handler.codec.http.HttpUtil;
 import io.netty.handler.codec.http.HttpVersion;
 import static junit.framework.Assert.assertEquals;
 import org.junit.Before;
@@ -23,7 +18,7 @@ import org.junit.Test;
 
 /**
  *
- * @author nholvoet
+ * @author Niels Holvoet
  */
 public class RequestDecodingValidatorTest {
     

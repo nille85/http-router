@@ -5,17 +5,11 @@
  */
 package be.nille.http.router.route;
 
-
-import be.nille.http.router.request.Request;
-import be.nille.http.router.response.Response;
-
 /**
  *
- * @author nholvoet
+ * @author Niels Holvoet
  */
-@FunctionalInterface
-public interface Route {
-  
-    Response response(Request request);
+public interface Router {
 
+    void start() throws Exception;
 }

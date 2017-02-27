@@ -9,13 +9,14 @@ package be.nille.http.router.route;
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
 
+
 /**
  *
  * @author nholvoet
  */
-@FunctionalInterface
-public interface Route {
-  
-    Response response(Request request);
 
+public interface RouteHandler extends Route {
+        
+    Response execute(Request request);
+    
 }

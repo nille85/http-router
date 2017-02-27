@@ -5,18 +5,22 @@
  */
 package be.nille.http.router.netty;
 
-import be.nille.http.router.exception.ExceptionHandler;
-import be.nille.http.router.HttpRouterException;
-import be.nille.http.router.RouteRegistry;
+
+
+
+
+
+import be.nille.http.router.body.TextBody;
+import be.nille.http.router.headers.Headers;
 
 import be.nille.http.router.request.Request;
 import be.nille.http.router.response.Response;
+import be.nille.http.router.response.RouteResponse;
 import be.nille.http.router.response.StatusCode;
-import be.nille.http.router.response.StatusCodeException;
-import be.nille.http.router.route.MatchedRequest;
-import be.nille.http.router.route.DefaultRoute;
+import be.nille.http.router.route.Route;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,13 +30,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RequestHandler extends ChannelInboundHandlerAdapter {
 
+    private final Route route;
 
-    private final RouteRegistry registry;
-    private final ExceptionHandler exceptionHandler;
-
-    public RequestHandler(final RouteRegistry registry, final ExceptionHandler exceptionHandler) {
-        this.registry = registry;
-        this.exceptionHandler = exceptionHandler;
+    public RequestHandler(final Route route){
+        this.route = route;
     }
 
     @Override
@@ -43,35 +44,16 @@ public class RequestHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         
-        if (msg instanceof Request.MetaData) {
-            ctx.fireChannelRead(msg);
-        }
-
         if (msg instanceof Request) {
             Response response;
-            //do some interception of request
             Request request = (Request) msg;
             try {
-                DefaultRoute route = registry.find(request.getMethod(), request.getPath().getValue());
-                log.info(String.format("Route found with method %s and path %s", route.getMethod(), route.getPath()));
-                Request matchedRequest = new MatchedRequest(route, request);
-                response = route.execute(matchedRequest);
-
-            } catch (StatusCodeException sce) {
-                response = exceptionHandler.handleException(
-                        new HttpRouterException(
-                                new HttpRouterException.Context(sce.getStatusCode(), request),
-                                sce
-                        )
-                );
+                response = route.response(request);
+                if(response.isEmpty()){
+                    response = new RouteResponse(new StatusCode(404), new TextBody(""), new Headers());
+                }
             } catch (Exception ex) {
-                HttpRouterException hre = new HttpRouterException(
-                        new HttpRouterException.Context(new StatusCode(
-                                        StatusCode.INTERNAL_SERVER_ERROR),
-                                request
-                        ),
-                        ex);
-                response = exceptionHandler.handleException(hre);
+                 response = new RouteResponse(new StatusCode(500), new TextBody(""), new Headers());
             }
             ctx.fireChannelRead(response);
         }

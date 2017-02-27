@@ -5,7 +5,6 @@
  */
 package be.nille.http.router.response;
 
-
 import lombok.Getter;
 
 /**
