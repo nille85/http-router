@@ -17,36 +17,32 @@ import lombok.ToString;
  *
  * @author nholvoet
  */
-
 @ToString
 public final class RouteResponse implements Response {
-    
+
     private final StatusCode statusCode;
     private final Body body;
     private final Headers headers;
-    
-  
-    
-    public RouteResponse(){
+
+    public RouteResponse() {
         this(new StatusCode(200), new TextBody(""), new Headers());
     }
-    public RouteResponse(final int statusCode, final Body body){
+
+    public RouteResponse(final int statusCode, final Body body) {
         this(new StatusCode(statusCode), body, new Headers());
     }
-    
-    public RouteResponse(final StatusCode statusCode, final Body body){
+
+    public RouteResponse(final StatusCode statusCode, final Body body) {
         this(statusCode, body, new Headers());
     }
-    
-    public RouteResponse(final StatusCode statusCode, final Body body, final Headers headers){
+
+    public RouteResponse(final StatusCode statusCode, final Body body, final Headers headers) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = headers;
     }
-    
-    
-    public RouteResponse withHeader(final String key, final String value){
-        
+
+    public RouteResponse withHeader(final String key, final String value) {
         return new RouteResponse(this.statusCode, body, headers.add(key, value));
     }
 
@@ -57,17 +53,18 @@ public final class RouteResponse implements Response {
 
     @Override
     public StatusCode getStatusCode() {
-       return this.statusCode;
+        return this.statusCode;
     }
 
     @Override
     public Headers getHeaders() {
         return headers;
     }
+     
 
     @Override
     public boolean isEmpty() {
         return false;
     }
-    
+
 }

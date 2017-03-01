@@ -16,13 +16,10 @@ import be.nille.http.router.response.RouteResponse;
 import be.nille.http.router.response.StatusCode;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
 import org.junit.Test;
 
 /**

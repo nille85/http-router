@@ -5,17 +5,11 @@
  */
 package be.nille.http.router.route;
 
+import be.nille.http.router.request.PathVariables;
 import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RequestMatcher;
-import be.nille.http.router.request.RouteWithVariablesRequest;
+import be.nille.http.router.request.RouteRequest;
 import be.nille.http.router.response.EmptyResponse;
 import be.nille.http.router.response.Response;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import lombok.Getter;
 
 /**
@@ -36,9 +30,13 @@ public class PathRoute implements Route {
 
     @Override
     public Response response(Request request) {
-        if (path.matches(request)) {
-            RouteWithVariablesRequest dRequest = new RouteWithVariablesRequest(request, path.parameterMap(request));
-            return origin.response(dRequest);
+        if (path.matches(request)) { 
+            return origin.response(
+                    new RouteRequest(
+                            request,
+                            new PathVariables(path.parameterMap(request))
+                    )
+            );
         }
         return new EmptyResponse();
     }

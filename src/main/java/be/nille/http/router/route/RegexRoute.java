@@ -5,8 +5,9 @@
  */
 package be.nille.http.router.route;
 
+import be.nille.http.router.request.PathVariables;
 import be.nille.http.router.request.Request;
-import be.nille.http.router.request.RouteWithVariablesRequest;
+import be.nille.http.router.request.RouteRequest;
 import be.nille.http.router.response.EmptyResponse;
 import be.nille.http.router.response.Response;
 import java.util.HashMap;
@@ -33,8 +34,12 @@ public class RegexRoute implements Route {
     @Override
     public Response response(Request request) {
         if (matches(request)) {
-            RouteWithVariablesRequest dRequest = new RouteWithVariablesRequest(request, getVariablesMap(request));
-            return origin.response(dRequest);
+            return origin.response(
+                    new RouteRequest(
+                            request,
+                            new PathVariables(getVariablesMap(request))
+                    )
+            );
         }
         return new EmptyResponse();
     }
