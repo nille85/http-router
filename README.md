@@ -1,4 +1,7 @@
 # HTTP Router
+
+[![Run Status](https://api.shippable.com/projects/58a9b9f6044ca00f00ea9a59/badge?branch=master)](https://app.shippable.com/projects/58a9b9f6044ca00f00ea9a59)
+
 The HTTP router is a non blocking object-oriented HTTP server based on Netty. An HTTP router consists of a socket port which is needed in order to start the server. 
 The default port when no port is specified is `80`. An Http router also needs a route implementation.
 
