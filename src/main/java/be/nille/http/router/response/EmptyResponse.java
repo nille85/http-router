@@ -7,7 +7,6 @@ package be.nille.http.router.response;
 
 import be.nille.http.router.body.Body;
 import be.nille.http.router.headers.Headers;
-import java.util.Map;
 
 /**
  *
