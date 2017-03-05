@@ -49,7 +49,7 @@ public class ResponseWriter extends ChannelInboundHandlerAdapter {
             log.info("creating netty response");
             FullHttpResponse nettyResponse = new DefaultFullHttpResponse(
                     HTTP_1_1, HttpResponseStatus.valueOf(response.getStatusCode().getValue()),
-                    Unpooled.copiedBuffer(response.getBody().print(), metaData.getCharset())
+                    Unpooled.copiedBuffer(response.getBody().bytes())
             );
 
             boolean keepAlive = metaData.isKeepAlive();

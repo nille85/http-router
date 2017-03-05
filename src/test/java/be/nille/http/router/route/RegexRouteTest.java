@@ -20,6 +20,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import static junit.framework.Assert.assertEquals;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.Test;
 
 /**
@@ -60,8 +62,8 @@ public class RegexRouteTest {
         );
 
         Response response = regex.response(request);
-        log.debug(response.getBody().print());
-        assertEquals("subscriptions", response.getBody().print());
+
+        assertArrayEquals("subscriptions".getBytes(), response.getBody().bytes());
     }
     
     @Test
@@ -82,8 +84,8 @@ public class RegexRouteTest {
         );
 
         Response response = regex.response(request);
-        log.debug(response.getBody().print());
-        assertEquals("", response.getBody().print());
+ 
+        Assert.assertArrayEquals("".getBytes(), response.getBody().bytes());
     }
 
     @Test
@@ -102,8 +104,8 @@ public class RegexRouteTest {
                 new Headers()
         );
         Response response = regex.response(request);
-        log.debug(response.getBody().print());
-        assertEquals("10", response.getBody().print());
+     
+        assertArrayEquals("10".getBytes(), response.getBody().bytes());
     }
 
 }

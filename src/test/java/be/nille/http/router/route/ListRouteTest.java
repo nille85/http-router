@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,21 +59,21 @@ public class ListRouteTest {
     public void listRouteShouldReturnGetRouteWhenGetRequestWasSubmitted() throws URISyntaxException{
         Request request = new RouteRequest(new Method(Method.GET), new URI("http://localhost/test"));
         Response response = listRoute.response(request);
-        assertEquals("Hello route 1",response.getBody().print());
+        assertArrayEquals("Hello route 1".getBytes(),response.getBody().bytes());
     }
     
     @Test
     public void listRouteShouldReturnPostRouteWhenPostRequestWasSubmitted() throws URISyntaxException{
         Request request = new RouteRequest(new Method(Method.POST), new URI("http://localhost/test"));
         Response response = listRoute.response(request);
-        assertEquals("Hello route 2",response.getBody().print());
+        assertArrayEquals("Hello route 2".getBytes(),response.getBody().bytes());
     }
     
     @Test
     public void listRouteShouldReturnDeleteRouteWhenDeleteRequestWasSubmitted() throws URISyntaxException{
         Request request = new RouteRequest(new Method(Method.DELETE), new URI("http://localhost/test"));
         Response response = listRoute.response(request);
-        assertEquals("Hello route 3",response.getBody().print());
+        assertArrayEquals("Hello route 3".getBytes(),response.getBody().bytes());
     }
     
     @Test

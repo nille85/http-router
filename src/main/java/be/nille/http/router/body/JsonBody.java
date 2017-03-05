@@ -26,9 +26,9 @@ public class JsonBody implements Body {
 
     
     @Override
-    public String print() {
+    public byte[] bytes() {
         try {
-            return mapper.writeValueAsString(object);
+            return mapper.writeValueAsString(object).getBytes();
         } catch (JsonProcessingException ex) {
            throw new RuntimeException(
                    String.format("Could not create json"), 

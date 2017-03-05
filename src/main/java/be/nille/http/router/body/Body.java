@@ -11,6 +11,6 @@ package be.nille.http.router.body;
  */
 public interface Body {
       
-    String print();
+    byte[] bytes();
       
 }

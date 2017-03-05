@@ -17,8 +17,8 @@ public class TextBody implements Body {
     }
     
     @Override
-    public String print() {
-        return plainText;
+    public byte[] bytes() {
+        return plainText.getBytes();
     }
 
 }

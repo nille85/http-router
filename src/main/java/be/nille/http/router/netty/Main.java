@@ -14,6 +14,7 @@ import be.nille.http.router.route.MethodRoute;
 import be.nille.http.router.route.ListRoute;
 import be.nille.http.router.route.PathRoute;
 import be.nille.http.router.route.Route;
+import be.nille.http.router.route.StaticFileRoute;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
@@ -42,7 +43,8 @@ public class Main {
 
         List<Route> routes = new ArrayList<>();
 
-       
+        Route fileRoute = new StaticFileRoute("/static","submap");
+        routes.add(fileRoute);
 
         Route methodPathRoute = new MethodRoute(
                 new Method(Method.GET),

@@ -7,11 +7,19 @@ package be.nille.http.router.body;
 
 /**
  *
- * @author nholvoet
+ * @author Niels Holvoet
  */
-public interface BodyPrinter {
+public class ByteBody implements Body {
     
+    private final byte[] bytes;
     
-    public String print();
+    public ByteBody(final byte[] bytes){
+        this.bytes = bytes;
+    }
+
+    @Override
+    public byte[] bytes() {
+        return bytes;
+    }
     
 }
