@@ -2,9 +2,6 @@ apply plugin: 'java'
 apply plugin: "maven"
 apply plugin: "jacoco"
 apply plugin: 'signing'
-apply plugin: 'application'
-
-mainClassName = "be.nille.http.router.netty.Main"
 
 
 sourceCompatibility = '1.8'
@@ -61,7 +58,7 @@ dependencies {
 test {   
     reports {
         junitXml.enabled = true
-        junitXml.destination = "shippable/testresults"
+        junitXml.destination = "../shippable/testresults"
     }
     
     testLogging {
@@ -77,7 +74,7 @@ jacocoTestReport {
 
 jacoco {
     toolVersion = "0.7.6.201602180812"
-    reportsDir = file("shippable/codecoverage")
+    reportsDir = file("../shippable/codecoverage")
 }
 
 

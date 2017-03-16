@@ -1,0 +1,22 @@
+apply plugin: 'application'
+apply plugin: 'java'
+
+mainClassName = "be.nille.http.router.samples.simple.router.Main"
+
+
+sourceCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+dependencies {
+    compile project(':core')
+}
+
+
+repositories {
+    mavenCentral()
+    // You may define additional repositories, or even remove "mavenCentral()".
+    // Read more about repositories here:
+    //   http://www.gradle.org/docs/current/userguide/dependency_management.html#sec:repositories
+}
+
+

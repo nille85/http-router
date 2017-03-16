@@ -1,2 +1,10 @@
 rootProject.name = 'http-router'
+include 'core'
+
+println "settings dir:" + settingsDir
+def samplesDir = new File( settingsDir, 'samples' )
+
+include ':simple-router'
+project( ':simple-router' ).projectDir = new File( samplesDir, 'simple-router' )
+
 
