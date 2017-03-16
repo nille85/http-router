@@ -1,6 +1,6 @@
 rootProject.name = 'http-router'
-include 'core'
 
+include 'core'
 println "settings dir:" + settingsDir
 def samplesDir = new File( settingsDir, 'samples' )
 
