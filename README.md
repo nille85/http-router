@@ -273,6 +273,20 @@ Route jsonRoutes = new JSONRoute(
 
 ```
 
+##Static Files
+
+Static files can be served by using the StaticFileRoute implementation.
+
+The definition underneath serves all resources located in `src/main/resources` from the URI path `static`. if an image exists under `src/main/resources/image.jpg` then it will be accessible from the URI `http://<host>/static/image.jpg`. 
+```
+Route staticFileRoute = new StaticFileRoute("/static");
+```
+
+The definition underneath serves all resources located in `src/main/resources/submap` from the URI path `static`. if an image exists under `src/main/resources/submap/image.jpg` then it will be accessible from the URI `http://<host>/static/image.jpg`. 
+
+```
+Route staticFileRoute = new StaticFileRoute("/static","submap");
+```
 
 ##Unit Testing
 Unit testing new routes can be done in the same way like the unit tests that are present in this library.
