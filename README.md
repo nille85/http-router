@@ -232,7 +232,7 @@ public interface Body {
 }
 ```
 
-##Content Negotiation
+##Content Negotiation 
 Below you can find a simple JSON content-negotiation implementation .
 
 ```
