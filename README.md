@@ -11,7 +11,7 @@ Route route = (request) -> new RouteResponse(new StatusCode(200), new TextBody("
 new HttpRouter(route).start();
 ```
 
-##Route
+## Route
 Everything you pass to the HTTP router is a route. A route is a functional interface that can have an unlimited range of implementations.
 
 ```
@@ -24,7 +24,7 @@ public interface Route {
 ```
 
 
-###MethodRoute
+### MethodRoute
 The framework uses the decorator pattern intensively. Every Route can be decorated with another route which makes the framework very flexible.
 When the route underneath is passed to the router, every GET request will result in a status code 200 with the text Hello World. 
 When another request method is used, the route will result in an EmptyResponse object for which the HTTP router will return the status code `404 Not Found`
@@ -37,7 +37,7 @@ new HttpRouter(route).start();
 
 
 
-###ListRoute
+### ListRoute
 
 With the ListRoute implementation you can supply a list of routes. The first route that is matched will be used for creating the response.
 
@@ -67,7 +67,7 @@ new HttpRouter(listRoute).start();
 ```
 
 
-###PathRoute
+### PathRoute
 The PathRoute implementation can be parameterized. It can also be combined with other route implementations. The outer routes are always first evaluated. 
 
 ```
@@ -94,7 +94,7 @@ Route listRoute = new ListRoute(routes);
 new HttpRouter(listRoute).start();
 ```
 
-###RegexRoute
+### RegexRoute
 A route can also be added using a regex. The groups can be captured from the request using the index of the regex group. 
 ```
 RegexRoute regexRoute = new RegexRoute(
@@ -107,11 +107,11 @@ RegexRoute regexRoute = new RegexRoute(
 
 ```
 
-##Building Custom Routes
+## Building Custom Routes
 
 Custom routes can easily be created by implementing the `Route` interface.
  
-###LoggingRoute
+### LoggingRoute
 
 ```
 @Slf4j
@@ -145,7 +145,7 @@ new HttpRouter(listRoute).start();
 ```
 
 
-###AuthenticatedRoute
+### AuthenticatedRoute
 The example underneath checks if a request header `X-AUTH` with the value `secret` is present for the matched route.
 If the request does not contain this header, a status code `401` is returned.
 ```
@@ -184,7 +184,7 @@ It can then be used to protect certain routes. In the example below all routes a
 
 ```
 
-###InterceptRequestRoute
+### InterceptRequestRoute
 You can also easily intercept requests and pass it on to the next route.
 ```
 public class InterceptRequestRoute implements Route{
@@ -208,7 +208,7 @@ public class InterceptRequestRoute implements Route{
     
 }
 ```
-##Other Media Types
+## Other Media Types
 You can return JSON by using JsonBody instead of TextBody. The content-type header also needs to be added. 
 
 ```
@@ -232,7 +232,7 @@ public interface Body {
 }
 ```
 
-##Content Negotiation 
+## Content Negotiation 
 Below you can find a simple JSON content-negotiation implementation .
 
 ```
@@ -273,7 +273,7 @@ Route jsonRoutes = new JSONRoute(
 
 ```
 
-##Static Files
+## Static Files
 
 Static files can be served by using the StaticFileRoute implementation.
 
@@ -288,7 +288,7 @@ The definition underneath serves all resources located in `src/main/resources/su
 Route staticFileRoute = new StaticFileRoute("/static","submap");
 ```
 
-##Unit Testing
+## Unit Testing
 Unit testing new routes can be done in the same way like the unit tests that are present in this library.
 ```
 public class MethodRouteTest {
